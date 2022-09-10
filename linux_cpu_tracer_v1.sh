@@ -17,7 +17,7 @@
 
 
 #############################################################
-#                    Define vars     						#
+#                    Define vars     			    #
 #############################################################
 
 # Test "$1" content: must have a value and must be a number.
@@ -58,16 +58,16 @@ PYTHON=""
 #
 if ! [[ $1 =~ $RE ]]
 	then
-		echo -e " *** Usage: ./linux_cpu_tracer_v2.sh <capture time in seconds>"
+		echo -e " *** Usage: ./linux_cpu_tracer_v1.sh <capture time in seconds>"
 		exit 0
 	fi
 
 #############################################################
-#                   END Define vars     					#
+#                   END Define vars     		    #
 #############################################################
 
 #############################################################
-#                    Define Functions						#
+#                    Define Functions	        	    #
 #############################################################
 
 # Feeding CPU statistics inside each PID file
@@ -245,11 +245,11 @@ while [ $INIT -lt $LIMIT ]
 	done
 }
 #############################################################
-#                 END Define Functions						#
+#                 END Define Functions			    #
 #############################################################
 
 #############################################################
-#                    Run Functions & Co.        			#
+#                    Run Functions & Co.        	    #
 #############################################################
 
 # Check if MDATP service is installed and running
@@ -327,7 +327,7 @@ cat $DIRNAME/$MAIN_LOGFILENAME | grep $PID4 >> $DIRNAME/pid4.txt
 feed_stats > /dev/null 2>&1
 
 ##################################################################
-##                  Create files for plotting                    #
+#                   Create files for plotting                    #
 ##################################################################
 
 # Create X axis
