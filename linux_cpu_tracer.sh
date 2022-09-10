@@ -58,7 +58,7 @@ PYTHON=""
 #
 if ! [[ $1 =~ $RE ]]
 	then
-		echo -e " *** Usage: ./linux_cpu_tracer_v1.sh <capture time in seconds>"
+		echo -e " *** Usage: ./linux_cpu_tracer.sh <capture time in seconds>"
 		exit 0
 	fi
 
