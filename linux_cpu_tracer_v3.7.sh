@@ -1,3 +1,4 @@
+echo "$0 $@" >> linux_cpu_tracer.log
 (
 #!/bin/bash
 #
