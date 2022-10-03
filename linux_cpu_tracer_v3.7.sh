@@ -291,6 +291,16 @@ do
 	: $((INIT++))
 done
 }
+## Function to save directory stack
+function volver {
+if [ -n "$PILADIR" ]; then
+PILADIR=${PILADIR#* }
+cd ${PILADIR%% *}
+echo $PILADIR
+else
+echo "La pila esta vacia, no se cambio de directorio"
+fi
+}
 
 feed_data () {
 
@@ -806,12 +816,16 @@ echo -ne '     ||||||||||||||||||||||||||||||||||||||[100%]\r'
 sleep 1
 echo " "
 
+
 }
+
 
 header_linux () {
 echo " -------------- $(date) -------------- "
 echo " ----------- Running CPU tracer for Linux (v$SCRIPT_VERSION)-----------"
 }
+
+
 
 network_trace () {
 
