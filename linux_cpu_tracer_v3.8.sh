@@ -415,42 +415,6 @@ for (( i = 1; i <= $NR_OF_PIDS; i++ ))
 	done
 }
 
-detect_python_version ()  {
-
-# Define vars to work with python detection function
-PYTHON_V=$(which python 2> /dev/null)
-PYTHON2_V=$(which python2 2> /dev/null)
-PYTHON3_V=$(which python3 2> /dev/null)
-PYTHON=""
-
-# Detect Python version available. If more than one version found
-# we'll go with the most recent version
-#
-if ! [ -z $PYTHON_V ]
-	 then 
-		PYTHON="$PYTHON_V"
-fi
-
-if ! [ -z $PYTHON2_V ]
-	 then 
-		PYTHON="$PYTHON2_V"
-fi
-
-if ! [ -z $PYTHON3_V ]
-	 then 
-		PYTHON="$PYTHON3_V"
-fi
-
-if ! [ -z $PYTHON ]
-	 then 
-		echo -e " *** Using Python version $PYTHON."
-	 else
-		echo -e " *** Python required to generate RTP statistics, but not found."
-		echo -e " *** Exiting..."
-		exit 0
-fi
-}
-
 check_rtp_enabled () {
 
 # Check RTP enabled
