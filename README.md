@@ -41,7 +41,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 - Run LCMT based on your needs
   - ./linux_cpu_tracer.sh -ps 300
 
-## Tested and known to have produced expected results in the following systems:
+## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
 - Ubuntu 20.04.4 LTS (Focal Fossa)
 - CentOS 7.9
@@ -51,7 +51,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 - RHEL 7.8
 - RHEL 8
 
-Let me know if you ahve more systems to add to the above list. :)
+Let me know if you have more systems to add to the above list (or if you come accross a system that doesn't behave as expected). :)
 
 
 
