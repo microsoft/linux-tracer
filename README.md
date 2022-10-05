@@ -59,6 +59,7 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 
 ### Console example of above steps:
 ![image](https://user-images.githubusercontent.com/113130572/194175150-fa8c89f8-cf3f-4148-814c-157e0226a2af.png)
+After having the investigation package available as per above, transfer it to your local device and investigate data.
 
 ## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
