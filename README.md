@@ -2,12 +2,12 @@
 Linux CPU & Memory Tracer
 
 ## Context:
-LCMT is intended for Linux performance data collection, CPU and memory load investigation and analysis or when high CPU or memory load is reported. 
-It aims to quickly being able to determine a device’s CPU and memory load and ellaborate on mitigation, as well as propose fixes.
-It's very intuitive and easy to use, returns results that are easy to interpret and relies on very basic tools existent in all Linux base installations.
+LCMT is intended for Linux performance data collection, CPU and Memory load investigation and analysis, when high CPU or Memory load is reported. 
+It aims at quickly being able to determine a device’s CPU and Memory load and ellaborate on mitigation, as well as propose fixes.
+It's very intuitive and easy to use, returns results that are easy to interpret and relies on very basic set of tools existent in virtually all Linux minimal installations.
 ## What it does:
-LCMT captures CPU and memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux: it does not depend on python or "Client Analyzer" code to be executed. 
-It’s a command-line tool, shellscript, that receives an interval of time, and captures CPU and memory activity for that specified period. The processes being monitored are wdavdaemon (edr, rtp and av components) and audisp plugin. Can also be used in a long run mode in the background, to spot memory leaks or track resource behavior for a long time.
+LCMT captures CPU and Memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux: it does not depend on python or "Client Analyzer" code to be executed. 
+It’s a command-line tool, shellscript, that receives an interval of time as parameter, and captures CPU and Memory activity for that specified period. The processes being monitored are wdavdaemon (edr, rtp and av components) and audisp plugin. Can also be used in a 'long run' mode in the background, to spot memory leaks or track resource behavior for a long time.
 
 ## Main advantages 
 - Easy to use and to interpret data
@@ -27,10 +27,10 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 
 ![image](https://user-images.githubusercontent.com/113130572/194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263.png)
 
-## Help dialog for v3.8 of the script:
+## Help dialog for LCMT v3.8:
 ![image](https://user-images.githubusercontent.com/113130572/194162759-8c2fc984-f49c-44bb-ae65-92cdf2fa21f0.png)
 
-## Tracer in action:
+## Executing LCMT:
 ![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
 
 ## Investigation package content:
@@ -45,7 +45,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
   - unzip download.zip
 - Go into script directory:
   - cd linux-tracer-download
-- Adjust executions permissions:
+- Set execution permissions:
   - chmod +x linux_cpu_tracer.sh
 - Read disclaimer:
   - ./linux_cpu_tracer.sh -d
@@ -66,5 +66,3 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 - Oracle Enterprise Linux 8.6
 - RHEL 7.8
 - RHEL 8
-
-Let me know if you have more systems to add to the above list (or if you come accross a system that doesn't behave as expected). :)
