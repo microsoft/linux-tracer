@@ -46,7 +46,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
   - ./linux_cpu_tracer.sh -ps 300
 
 ### Console example of above steps:
-![image](https://user-images.githubusercontent.com/113130572/194174606-a9f1450e-c90a-42f1-af84-e2a8d282e105.png)
+![image](https://user-images.githubusercontent.com/113130572/194175015-5507db46-2c1d-4e5b-ab01-6abfd2fbc801.png)
 
 ## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
