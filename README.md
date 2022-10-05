@@ -27,17 +27,17 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 ## Usage:
 ### From the Linux server:
 - Get tool package:
-  wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
+  - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 - Unzip package:
-  unzip download.zip
+  - unzip download.zip
 - Go into script directory:
-  cd linux-tracer-download
+  - cd linux-tracer-download
 - Adjust executions permissions
-  chmod +x linux_cpu_tracer.sh
+  - chmod +x linux_cpu_tracer.sh
 - Read disclaimer:
-  ./linux_cpu_tracer.sh -d
+  - ./linux_cpu_tracer.sh -d
 - Read help dialog:
-  ./linux_cpu_tracer.sh -h
+  - ./linux_cpu_tracer.sh -h
 - Run LCMT based on your needs
   - ./linux_cpu_tracer.sh -ps 300
 
