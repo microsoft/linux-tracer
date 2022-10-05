@@ -9,6 +9,14 @@ It's very intuitive and easy to use, returns results that are easy to interpret 
 The script linux_cpu_tracer.sh, captures CPU and memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux: it does not depend on python or "Client Analyzer" code to be executed. 
 It’s a command-line tool, shellscript, that receives an interval of time, and captures CPU and memory activity for that specified period. The processes being monitored are wdavdaemon (edr, rtp and av components) and audisp plugin. Can also be used in a long run mode in the background, to spot memory leaks or track resource behavior for a long time.
 
+## Main advantages 
+- Easy to use and to interpret data
+- Light-wheight
+- Fast to execute
+- Does not depend on python
+- Basic Shell Script using 'awk', 'sed', 'grep', 'tee' base install available Linux tools
+- Easily adaptable and scalable code
+
 ## Examples of performance graphs for RAM and CPU:
 ![image](https://user-images.githubusercontent.com/113130572/194161484-c04fece5-ac7a-440f-b1f4-b221bdd6a344.png)
 
