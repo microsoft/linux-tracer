@@ -26,7 +26,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 
 ## Usage:
 ### From the Linux server:
-- Get tool package:
+- Get script package:
   - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 - Unzip package:
   - unzip download.zip
@@ -40,6 +40,18 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
   - ./linux_cpu_tracer.sh -h
 - Run LCMT based on your needs
   - ./linux_cpu_tracer.sh -ps 300
+
+## Tested and known to have produced expected results in the following systems:
+- RHEL 8.2 (Ootpa) 
+- Ubuntu 20.04.4 LTS (Focal Fossa)
+- CentOS 7.9
+- Debian 11.5
+- Oracle Enterprise Linux 7.9
+- Oracle Enterprise Linux 8.6
+- RHEL 7.8
+- RHEL 8
+
+Let me know if you ahve more systems to add to the above list. :)
 
 
 
