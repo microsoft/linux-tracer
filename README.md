@@ -24,26 +24,29 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 ## Tracer in action:
 ![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
 
-## Package content:
+## Investigation package content:
 ![image](https://user-images.githubusercontent.com/113130572/194172441-2f072ffb-9360-40b4-8291-bc1a43a259cf.png)
 ![image](https://user-images.githubusercontent.com/113130572/194172355-9d9f2ac5-ad07-4a38-9534-9561164a151c.png)
 
 ## Usage:
-### From the Linux server to collect logs from:
+### From the Linux server to collect logs from, do as follows:
 - Get script package:
   - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 - Unzip package:
   - unzip download.zip
 - Go into script directory:
   - cd linux-tracer-download
-- Adjust executions permissions
+- Adjust executions permissions:
   - chmod +x linux_cpu_tracer.sh
 - Read disclaimer:
   - ./linux_cpu_tracer.sh -d
 - Read help dialog:
   - ./linux_cpu_tracer.sh -h
-- Run LCMT based on your needs
+- Run LCMT based on your needs (below example runs for 5 minutes, 300 seconds):
   - ./linux_cpu_tracer.sh -ps 300
+
+### Console example of above steps:
+![image](https://user-images.githubusercontent.com/113130572/194175150-fa8c89f8-cf3f-4148-814c-157e0226a2af.png)
 
 ## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
@@ -56,8 +59,3 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 - RHEL 8
 
 Let me know if you have more systems to add to the above list (or if you come accross a system that doesn't behave as expected). :)
-
-
-
-
-
