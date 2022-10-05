@@ -24,12 +24,12 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 ## Tracer in action:
 ![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
 
-## Package content:
+## Investigation package content:
 ![image](https://user-images.githubusercontent.com/113130572/194172441-2f072ffb-9360-40b4-8291-bc1a43a259cf.png)
 ![image](https://user-images.githubusercontent.com/113130572/194172355-9d9f2ac5-ad07-4a38-9534-9561164a151c.png)
 
 ## Usage:
-### From the Linux server to collect logs from:
+### From the Linux server to collect logs from, do as follows:
 - Get script package:
   - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 - Unzip package:
@@ -46,7 +46,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
   - ./linux_cpu_tracer.sh -ps 300
 
 ### Console example of above steps:
-![image](https://user-images.githubusercontent.com/113130572/194175015-5507db46-2c1d-4e5b-ab01-6abfd2fbc801.png)
+![image](https://user-images.githubusercontent.com/113130572/194175150-fa8c89f8-cf3f-4148-814c-157e0226a2af.png)
 
 ## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
