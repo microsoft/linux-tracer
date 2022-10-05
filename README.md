@@ -34,8 +34,12 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
   cd linux-tracer-download
 - Adjust executions permissions
   chmod +x linux_cpu_tracer.sh
-./linux_cpu_tracer.sh -d to read disclaimer
-./linux_cpu_tracer.sh -ps 300
+- Read disclaimer:
+  ./linux_cpu_tracer.sh -d
+- Read help dialog:
+  ./linux_cpu_tracer.sh -h
+- Run LCMT based on your needs
+  - ./linux_cpu_tracer.sh -ps 300
 
 
 
