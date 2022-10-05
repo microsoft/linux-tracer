@@ -16,6 +16,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 - Does not depend on python
 - Basic Shell Script using 'awk', 'sed', 'grep', 'tee' base install available Linux tools
 - Easily adaptable and scalable code
+- Simply execute the script and collect resulting package for investigation 
 
 ## Examples of performance graphs for RAM and CPU:
 ![image](https://user-images.githubusercontent.com/113130572/194161484-c04fece5-ac7a-440f-b1f4-b221bdd6a344.png)
