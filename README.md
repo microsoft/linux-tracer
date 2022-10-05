@@ -25,7 +25,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 ![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
 
 ## Usage:
-### From the Linux server:
+### From the Linux server to colelct logs from:
 - Get script package:
   - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 - Unzip package:
