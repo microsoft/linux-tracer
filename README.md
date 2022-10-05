@@ -1,5 +1,5 @@
-# linux-tracer
-Linux CPU tracer for MDATP processes
+# LCMT
+Linux CPU & Memory Tracer
 
 ## Context:
 This tool is intended for Linux performance data collection, CPU and memory load investigation and analysis or when high CPU or memory load is reported. 
