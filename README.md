@@ -2,11 +2,11 @@
 Linux CPU & Memory Tracer
 
 ## Context:
-This tool is intended for Linux performance data collection, CPU and memory load investigation and analysis or when high CPU or memory load is reported. 
+LCMT is intended for Linux performance data collection, CPU and memory load investigation and analysis or when high CPU or memory load is reported. 
 It aims to quickly being able to determine a device’s CPU and memory load and ellaborate on mitigation, as well as propose fixes.
 It's very intuitive and easy to use, returns results that are easy to interpret and relies on very basic tools existent in all Linux base installations.
 ## What it does:
-The script linux_cpu_tracer.sh, captures CPU and memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux: it does not depend on python or "Client Analyzer" code to be executed. 
+LCMT captures CPU and memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux: it does not depend on python or "Client Analyzer" code to be executed. 
 It’s a command-line tool, shellscript, that receives an interval of time, and captures CPU and memory activity for that specified period. The processes being monitored are wdavdaemon (edr, rtp and av components) and audisp plugin. Can also be used in a long run mode in the background, to spot memory leaks or track resource behavior for a long time.
 
 ## Main advantages 
