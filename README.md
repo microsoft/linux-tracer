@@ -36,14 +36,17 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
   - unzip download.zip
 - Go into script directory:
   - cd linux-tracer-download
-- Adjust executions permissions
+- Adjust executions permissions:
   - chmod +x linux_cpu_tracer.sh
 - Read disclaimer:
   - ./linux_cpu_tracer.sh -d
 - Read help dialog:
   - ./linux_cpu_tracer.sh -h
-- Run LCMT based on your needs
+- Run LCMT based on your needs (below example runs for 5 minutes, 300 seconds):
   - ./linux_cpu_tracer.sh -ps 300
+
+### Console example of above steps:
+![image](https://user-images.githubusercontent.com/113130572/194174606-a9f1450e-c90a-42f1-af84-e2a8d282e105.png)
 
 ## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
