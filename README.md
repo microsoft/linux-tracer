@@ -7,4 +7,13 @@ It aims to quickly being able to determine a device’s CPU and memory load and 
 ## What it does:
 The script linux_cpu_tracer.sh, captures CPU and memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux. 
 It’s a command-line tool, shellscript, that receives an interval of time, in seconds, as its only parameter, and captures CPU and memory activity for that specified period every second. The processes being monitored are wdavdaemon and MDATP auditd plugin. Can also be used in a long run mode in the background, to spot memory leaks.
-The script gathers data, by looping through the top command periodically, and filtering out relevant data regarding MDATP processes. Gathered data is then processed and organized so as to present human-readable log files. 
+The script gathers data, by looping through the top command periodically, and filtering out relevant data regarding MDATP processes. Gathered data is then processed and organized so as to present human-readable log files and graphs.
+
+
+![image](https://user-images.githubusercontent.com/113130572/194161484-c04fece5-ac7a-440f-b1f4-b221bdd6a344.png)
+
+![image](https://user-images.githubusercontent.com/113130572/194161566-7e2be150-c480-485f-9eef-eee6941277b9.png)
+
+![image](https://user-images.githubusercontent.com/113130572/194161596-32769f74-9035-4a47-9f71-4d5c160de1a5.png)
+
+![image](https://user-images.githubusercontent.com/113130572/194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263.png)
