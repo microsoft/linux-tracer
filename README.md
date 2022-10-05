@@ -29,7 +29,7 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 ![image](https://user-images.githubusercontent.com/113130572/194172355-9d9f2ac5-ad07-4a38-9534-9561164a151c.png)
 
 ## Usage:
-### From the Linux server to colelct logs from:
+### From the Linux server to collect logs from:
 - Get script package:
   - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 - Unzip package:
