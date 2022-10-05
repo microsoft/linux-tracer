@@ -1,6 +1,9 @@
 # LCMT
 Linux CPU & Memory Tracer
 
+# LCMT last available version
+Last version is v3.8
+
 ## Context:
 LCMT is intended for Linux performance data collection, CPU and Memory load investigation and analysis, when high CPU or Memory load is reported. 
 It aims at quickly being able to determine a device’s CPU and Memory load and ellaborate on mitigation, as well as propose fixes.
@@ -28,7 +31,7 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 ![image](https://user-images.githubusercontent.com/113130572/194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263.png)
 
 ## Help dialog for LCMT v3.8:
-![image](https://user-images.githubusercontent.com/113130572/194162759-8c2fc984-f49c-44bb-ae65-92cdf2fa21f0.png)
+![image](https://user-images.githubusercontent.com/113130572/194181096-f3ac1fba-f8e7-472c-948f-b91e997df396.png)
 
 ## Executing LCMT:
 ![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
