@@ -24,6 +24,10 @@ It’s a command-line tool, shellscript, that receives an interval of time, and 
 ## Tracer in action:
 ![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
 
+## Package content:
+![image](https://user-images.githubusercontent.com/113130572/194172441-2f072ffb-9360-40b4-8291-bc1a43a259cf.png)
+![image](https://user-images.githubusercontent.com/113130572/194172355-9d9f2ac5-ad07-4a38-9534-9561164a151c.png)
+
 ## Usage:
 ### From the Linux server to colelct logs from:
 - Get script package:
