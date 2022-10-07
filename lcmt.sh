@@ -21,7 +21,7 @@ echo "$0 $@" > lcmt.log
 #                   START Define vars     				    #
 #############################################################
 
-SCRIPT_VERSION=3.8
+SCRIPT_VERSION=3.9
 
 HITS=$2
 WAIT=$3
@@ -433,24 +433,18 @@ fi
 }
 
 create_top_scanned_files () {
-
 echo -e " *** Creating statistics..."
-mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log
-cat $DIRNAME/rtp_stats_tmp1.log | grep "Total files scanned" | sort -k4rn | head -n 7 | uniq > $DIRNAME/rtp_stats_tmp2.log
+mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
 
-declare SCAN1=$(cat ${DIRNAME}/rtp_stats_tmp2.log | sort -k4rn | head -n 1 )
-declare SCAN2=$(cat ${DIRNAME}/rtp_stats_tmp2.log | sort -k4rn | head -n 2 | tail -n 1)
-declare SCAN3=$(cat ${DIRNAME}/rtp_stats_tmp2.log | sort -k4rn | head -n 3 | tail -n 1)
-declare SCAN4=$(cat ${DIRNAME}/rtp_stats_tmp2.log | sort -k4rn | head -n 4 | tail -n 1)
-declare SCAN5=$(cat ${DIRNAME}/rtp_stats_tmp2.log | sort -k4rn | head -n 5 | tail -n 1)
-declare SCAN6=$(cat ${DIRNAME}/rtp_stats_tmp2.log | sort -k4rn | head -n 6 | tail -n 1)
+totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
 
-grep -w -B4 -A3 "$SCAN1" $DIRNAME/rtp_stats_tmp1.log > $DIRNAME/rtp_statistics.txt
-grep -w -B3 -A3 "$SCAN2" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt
-grep -w -B3 -A3 "$SCAN3" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt
-grep -w -B3 -A3 "$SCAN4" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt
-grep -w -B3 -A3 "$SCAN5" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt
-grep -w -B3 -A3 "$SCAN6" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt
+sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nr))
+
+for ((c=0; c<=4;c++)); do
+
+        nl=`grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}'` # Get number of line
+        sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+done
 }
 
 tidy_up_short () {
