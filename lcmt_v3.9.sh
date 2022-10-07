@@ -21,7 +21,7 @@ echo "$0 $@" > lcmt.log
 #                   START Define vars     				    #
 #############################################################
 
-SCRIPT_VERSION=3.8
+SCRIPT_VERSION=3.9
 
 HITS=$2
 WAIT=$3
