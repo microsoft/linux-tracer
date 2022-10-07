@@ -1,4 +1,4 @@
-echo "$0 $@" >> linux_cpu_tracer.log
+echo "$0 $@" > lcmt.log
 (
 #!/bin/bash
 #
@@ -21,7 +21,7 @@ echo "$0 $@" >> linux_cpu_tracer.log
 #                   START Define vars     				    #
 #############################################################
 
-SCRIPT_VERSION=3.7
+SCRIPT_VERSION=3.8
 
 HITS=$2
 WAIT=$3
@@ -41,12 +41,6 @@ MAIN_LOGFILENAME=main.txt
 
 # Define dir file name
 DIRNAME=mdatp_performance_data
-
-# Define 'high_cpu_parser.py' URL for download
-HI_CPU_PARSER_URL=https://raw.githubusercontent.com/microsoft/mdatp-xplat/master/linux/diagnostic/high_cpu_parser.py
-
-# Define 'high_cpu_parser.py' download path
-HI_CPU_PARSER_FILE=${DIRNAME}/high_cpu_parser.py
 
 # Define source ip address when remote accessing with SSH
 SSH_SRC_IP=$(echo ${SSH_CLIENT} | awk -F ' ' '{print $1}')
@@ -87,7 +81,7 @@ check_time_param () {
 #
 if ! [[ $LIMIT =~ $RE ]]
 	then
-		echo -e " *** Usage: ./linux_cpu_tracer.sh -s <capture time in seconds>"
+		echo -e " *** Usage: ./lcmt.sh -s <capture time in seconds>"
 		exit 0
 fi
 }
@@ -99,35 +93,35 @@ check_time_param_long () {
 if [[ $HITS == 0 || $WAIT == 0 ]]
 	then
 		echo " *** Invalid parameter: zero is not a valid option."
-		echo " *** Usage: ./linux_cpu_tracer.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if ! [[ $HITS =~ $RE ]]
 	then
 	    echo " *** Invalid parameter for number of samples: not a number or not an integer."
-		echo " *** Usage: ./linux_cpu_tracer.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if ! [[ $WAIT =~ $FLOAT || $WAIT =~ $RE ]]
 	then
 		echo " *** Invalid parameter for interval in seconds: not a number"
-		echo " *** Usage: ./linux_cpu_tracer.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if [ -z $HITS ]
 	then
 	    echo " *** Invalid parameter for number of samples: empty"
-		echo " *** Usage: ./linux_cpu_tracer.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if [ -z $WAIT ]
 	then
 		echo " *** Invalid parameter for interval in seconds: empty"
-		echo " *** Usage: ./linux_cpu_tracer.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 }
@@ -264,7 +258,8 @@ do
   echo $(date)
   echo -e "    PID USER      PR   NI   VIRT    RES    SHR S  %CPU  %MEM   TIME+   COMMAND"
   top -cbn1 -w512 | grep -e mdatp_audisp_pl -e wdavdaemon | grep -v grep
-  sleep 1
+  # (processing time)+(wait time)=1 <=> 0.2+0.8=1 second
+  sleep 0.8
 done
 }
 
@@ -421,74 +416,6 @@ for (( i = 1; i <= $NR_OF_PIDS; i++ ))
 	done
 }
 
-detect_python_version ()  {
-
-# Define vars to work with python detection function
-PYTHON_V=$(which python 2> /dev/null)
-PYTHON2_V=$(which python2 2> /dev/null)
-PYTHON3_V=$(which python3 2> /dev/null)
-PYTHON=""
-
-# Detect Python version available. If more than one version found
-# we'll go with the most recent version
-#
-if ! [ -z $PYTHON_V ]
-	 then 
-		PYTHON="$PYTHON_V"
-fi
-
-if ! [ -z $PYTHON2_V ]
-	 then 
-		PYTHON="$PYTHON2_V"
-fi
-
-if ! [ -z $PYTHON3_V ]
-	 then 
-		PYTHON="$PYTHON3_V"
-fi
-
-if ! [ -z $PYTHON ]
-	 then 
-		echo -e " *** Using Python version $PYTHON."
-	 else
-		echo -e " *** Python required to generate RTP statistics, but not found."
-		echo -e " *** Exiting..."
-		exit 0
-fi
-}
-
-download_cpu_parser () {
-
-# Download cpu parser
-#
-echo -e " *** Downloading CPU parser..."
-
-wget -c $HI_CPU_PARSER_URL -P $DIRNAME/ > /dev/null 2>&1
-
-# Checking download status
-#
-if [ $? != 0 ]
-	then
-		echo -e " *** CPU parser was not downloaded successfully."
-		echo -e " *** Exiting."
-		exit 0
-	else
-		echo -e " *** Successfully downloaded CPU parser."
-fi
-
-# Fixing parser permissions
-#
-if [ -f $HI_CPU_PARSER_FILE ]
-	then	
-		echo -e " *** Fixing script permissions..."
-		chmod +x $HI_CPU_PARSER_FILE
-	else
-		echo -e " *** Could not fix script permissions."
-		echo -e	" *** Exiting."
-		exit 0
-fi
-}
-
 check_rtp_enabled () {
 
 # Check RTP enabled
@@ -506,31 +433,31 @@ fi
 }
 
 create_top_scanned_files () {
-
-# Create top scanned files
-#
 echo -e " *** Creating statistics..."
-mdatp diagnostic real-time-protection-statistics --output json > $DIRNAME/real_time_protection.json
+mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
 
-echo -e " *** Building real_time_protection.txt..."
-echo "PID-- Process-- Scans-- Path--" > $DIRNAME/real_time_protection_temp.log
-cat $DIRNAME/real_time_protection.json | $PYTHON $DIRNAME/high_cpu_parser.py  >> $DIRNAME/real_time_protection_temp.log
-cat $DIRNAME/real_time_protection_temp.log | column -t > $DIRNAME/real_time_protection.txt
+totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
+
+sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nr))
+
+for ((c=0; c<=4;c++)); do
+
+        nl=`grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}'` # Get number of line
+        sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+done
 }
 
 tidy_up_short () {
 
-mkdir $DIRNAME/report $DIRNAME/log $DIRNAME/rtp_statistics  
-mv $DIRNAME/real_time_protection.txt $DIRNAME/rtp_statistics
+mkdir $DIRNAME/report $DIRNAME/log
 mv $DIRNAME/*.txt $DIRNAME/report
 mv $DIRNAME/*.log $DIRNAME/log
 }
 
 tidy_up () {
 
-mkdir $DIRNAME/plot $DIRNAME/report $DIRNAME/log $DIRNAME/main $DIRNAME/raw $DIRNAME/rtp_statistics  
+mkdir $DIRNAME/plot $DIRNAME/report $DIRNAME/log $DIRNAME/main $DIRNAME/raw  
 mkdir $DIRNAME/plot/graphs
-mv $DIRNAME/real_time_protection.txt $DIRNAME/rtp_statistics
 mv $DIRNAME/main.txt $DIRNAME/main
 mv $DIRNAME/*.txt $DIRNAME/report
 mv $DIRNAME/*.plt $DIRNAME/plot
@@ -573,7 +500,7 @@ echo -e " *** Done. "
 
 append_log_file () {
 
-sudo zip -g $PACKAGE_NAME linux_cpu_tracer.log
+sudo zip -g $PACKAGE_NAME lcmt.log
 }
 
 long_run () {
@@ -599,13 +526,13 @@ echo " *** Collecting $HITS samples in $WAIT second intervals"
 
 get_pid_init () {
 DATE_START=$(date +%d.%m.%Y_%HH%MM%Ss)
-rm -rf /tmp/linux_cpu_tracer*
-bash -c 'echo $PPID' > /tmp/linux_cpu_tracer_start-$DATE_START.pid
+rm -rf /tmp/lcmt*
+bash -c 'echo $PPID' > /tmp/lcmt_start-$DATE_START.pid
 }
 
 get_pid_stop () {
 DATE_STOP=$(date +%d.%m.%Y_%HH%MM%Ss)
-cp /tmp/linux_cpu_tracer_start-$DATE_START.pid /tmp/linux_cpu_tracer_stop-$DATE_STOP.pid
+cp /tmp/lcmt_start-$DATE_START.pid /tmp/lcmt_stop-$DATE_STOP.pid
 }
 
 disclaimer () {
@@ -699,7 +626,9 @@ rm -rf $DIRNAME/mdatp_conectivity_test_ERROR.txt
 echo ""
 echo " *** Finished connectivity test."
 
-kill $SPIN_PID 
+{ kill $SPIN_PID && wait $SPIN_PID; } 2>/dev/null
+#kill $SPIN_PID &>/dev/null
+
 
 }
 
@@ -853,8 +782,6 @@ case $1 in
 			create_plotting_files
 			create_plot_graph
 			generate_report
-			detect_python_version
-			download_cpu_parser
 			check_rtp_enabled
 			create_top_scanned_files
 			auditd_initiators
@@ -893,8 +820,6 @@ case $1 in
 			check_requirements
 			create_dir_struct
 			collect_info
-			detect_python_version
-			download_cpu_parser
 			check_rtp_enabled
 			create_top_scanned_files
 			auditd_initiators
@@ -910,8 +835,6 @@ case $1 in
             create_dir_struct
 			collect_info
 			network_trace
-			detect_python_version
-			download_cpu_parser
 			check_rtp_enabled
 			create_top_scanned_files
 			auditd_initiators
@@ -928,8 +851,6 @@ case $1 in
             create_dir_struct
 			collect_info
 			mdatp_connectivity_test
-			detect_python_version
-			download_cpu_parser
 			check_rtp_enabled
 			create_top_scanned_files
 			auditd_initiators
@@ -944,26 +865,29 @@ case $1 in
 		;;
 		
 		-h) 
-			echo "     ================================= Linux CPU and Memory Tracer ==================================="
-			echo "     Usage:./linux_cpu_tracer.sh -ps <time to capture in seconds>, performance short"
-		    echo "	   ./linux_cpu_tracer.sh -pl <nr. of samples> <sampling interval in seconds>, performance long"
-			echo "	   ./linux_cpu_tracer.sh -d, displays disclaimer"
-			echo "	   ./linux_cpu_tracer.sh -ti, collects top initiators for auditd syscalls and top scans for AV"
-			echo "           ./linux_cpu_tracer.sh -nt, runs network trace on ALL interfaces"
-			echo "           ./linux_cpu_tracer.sh -ct, runs 'mdatp connectivity test'" 
+			echo "     ==================================== Linux CPU and Memory Tracer ==================================="
+			echo "     Usage:./lcmt.sh -ps <time to capture in seconds>, performance short-mode."
+		    echo "	   ./lcmt.sh -pl <nr. of samples> <sampling interval in seconds>, performance long-mode." 
+			echo "                   Can  be used with 'nohup' and sent to background [&] in long run captures, when remote "
+			echo "                   sessions need to be disconnected. Example: 'nohup ./lcmt.sh -pl 120 0.6 &'"
+			echo "	   ./lcmt.sh -d, displays disclaimer"
+			echo "	   ./lcmt.sh -ti, collects top initiators for auditd syscalls and top scans for AV."
+			echo "           ./lcmt.sh -nt <capture time, in seconds>, runs network trace on ALL interfaces."
+			echo "           ./lcmt.sh -ct, runs 'mdatp connectivity test'. Can take long if there are"
+			echo "                    connectivity issues or required MDE URLs are not whitelisted."
 			echo ""
-			echo "     Parameter table, for '-pl' option:"
-			echo "              One sample every hour for 24 hours: './linux_cpu_tracer.sh -pl 24 3600'"
-			echo "	      One sample every 30 minutes for 24 hours: './linux_cpu_tracer.sh -pl 48 1800'"
-			echo "	      One sample every 15 minutes for 24 hours: './linux_cpu_tracer.sh -pl 96 900' "
-			echo "	      One sample every 10 minutes for 24 hours: './linux_cpu_tracer.sh -pl 144 600'"
-			echo "	      One sample every 5 minutes for 24 hours:  './linux_cpu_tracer.sh -pl 288 300'"
-			echo "	      One sample every 2 minutes for 24 hours:  './linux_cpu_tracer.sh -pl 1440 60'"
+			echo "     Parameter table, for '-pl' option (use 'nohup' and send to background [&], if needed):"
+			echo "              One sample every hour for 24 hours: './lcmt.sh -pl 24 3600'"
+			echo "	      One sample every 30 minutes for 24 hours: './lcmt.sh -pl 48 1800'"
+			echo "	      One sample every 15 minutes for 24 hours: './lcmt.sh -pl 96 900' "
+			echo "	      One sample every 10 minutes for 24 hours: './lcmt.sh -pl 144 600'"
+			echo "	      One sample every 5 minutes for 24 hours:  './lcmt.sh -pl 288 300'"
+			echo "	      One sample every 2 minutes for 24 hours:  './lcmt.sh -pl 1440 60'"
 			echo ""
 			echo "     Note on '-pl' parameters:"
-			echo "              sampling interval: ( 0 < [int|float])"
-			echo "	      nr. of samples: ( 0 < [int])"
-			echo "     ================================================================================================="
+			echo "              - sampling interval: ( 0 < [int|float])"
+			echo "	      - nr. of samples: ( 0 < [int])"
+			echo "     ===================================================================================================="
 		;;
 		
 		*) 
@@ -974,5 +898,5 @@ esac
 #
 # EOF
 #
-) 2>&1 | tee -a linux_cpu_tracer.log
+) 2>&1 | tee -a lcmt.log
 
