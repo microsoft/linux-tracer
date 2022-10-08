@@ -765,22 +765,24 @@ calc () {
 
     hour_minute () {
         read -p  " *** How long do you want to capture for? (hours): " CAPTURE_PERIOD
+
+		if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
         echo "   > Capture period will be $CAPTURE_PERIOD hours."
 
-        if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
-        then    
-            echo " *** Invalid parameter. Re-run script and try again."
-            exit 0
-        fi
-
         read -p  " *** What will be your capture interval? (minutes): " CAPTURE_INTERVAL
-        echo "   > Capture interval will be $CAPTURE_INTERVAL minutes."
 
-        if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]+$ ]]
+		if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]+$ ]]
         then    
             echo " *** Invalid parameter. Re-run script and try again."
             exit 0
         fi
+
+        echo "   > Capture interval will be $CAPTURE_INTERVAL minutes."
 
         PARAM1_UP=$(echo "scale=0; ${CAPTURE_PERIOD}*3600" | bc -l)
         #echo $PARAM1_UP
@@ -796,7 +798,7 @@ calc () {
     minute_second () {
 
         read -p  " *** How long do you want to capture for? (minutes): " CAPTURE_PERIOD
-        echo "   > Capture period will be $CAPTURE_PERIOD minutes."
+        
 
         if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
         then    
@@ -804,14 +806,17 @@ calc () {
             exit 0
         fi
 
-        read -p  " *** What will be your capture interval? (seconds): " CAPTURE_INTERVAL
-        echo "   > Capture interval will be $CAPTURE_INTERVAL seconds."
+		echo "   > Capture period will be $CAPTURE_PERIOD minutes."
 
+        read -p  " *** What will be your capture interval? (seconds): " CAPTURE_INTERVAL
+        
         if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]*(\.[0-9]+)?$ ]]
         then    
             echo " *** Invalid parameter. Re-run script and try again."
             exit 0
         fi
+
+		echo "   > Capture interval will be $CAPTURE_INTERVAL seconds."
 
         PARAM1_UP=$(echo "scale=1; ${CAPTURE_PERIOD}*60" | bc -l)
         PARAM1_DWN=${CAPTURE_INTERVAL}
@@ -824,13 +829,14 @@ calc () {
     hour_second () {
 
         read -p  " *** How long do you want to capture for? (hours): " CAPTURE_PERIOD
-        echo "   > Capture period will be $CAPTURE_PERIOD hours."
-
+        
         if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
         then    
             echo " *** Invalid parameter. Re-run script and try again."
             exit 0
         fi
+
+		echo "   > Capture period will be $CAPTURE_PERIOD hours."
 
         read -p  " *** What will be your capture interval? (seconds): " CAPTURE_INTERVAL
         echo "   > Capture interval will be $CAPTURE_INTERVAL seconds."
