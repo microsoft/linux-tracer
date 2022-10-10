@@ -442,9 +442,12 @@ totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}
 sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nr))
 
 for ((c=0; c<=4;c++)); do
-
-        nl=`grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}'` # Get number of line
-        sed -n "$(($nl-4)),$(($nl+3)) p" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+       
+	if((! ${sortedFiles[$c]} == 0))
+	then
+		nl=`grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}'` # Get number of line
+		sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+	fi
 done
 }
 
