@@ -433,7 +433,7 @@ fi
 }
 
 create_top_scanned_files () {
-echo -e " *** Creating statistics..."
+echo " *** Creating statistics..."
 sudo mdatp config real-time-protection-statistics --value enabled > /dev/null 2>&1
 mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
 
@@ -570,7 +570,7 @@ echo "**************************************************************************
 auditd_initiators () {
 
 sudo bash <<"EOF"
-DIRNAME=mdatp_performance_data
+DIRNAME=betaXplatPerformanceTool
 echo "Top keys:" > $DIRNAME/auditd_initiators.txt
 cat /var/log/audit/audit.* | grep type=SYSCALL | awk -F ' ' '{print $28}' | sort | uniq -c | sort -rn | head -n 10 >> $DIRNAME/auditd_initiators.txt
 echo "" >> $DIRNAME/auditd_initiators.txt
