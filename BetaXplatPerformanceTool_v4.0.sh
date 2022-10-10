@@ -215,7 +215,7 @@ fi
 # 
 check_mdatp_running () {
 
-echo -e " *** Checking if MDAPT is installed..."
+echo -e " *** Checking if MDATP is installed..."
 
 which mdatp > /dev/null 2>&1
 
@@ -228,7 +228,7 @@ if [ $? != 0 ]
 		echo -e " *** Found 'mdatp'. [OK]"
 fi
 
-echo -e " *** Checking if MDAPT service is running... "
+echo -e " *** Checking if MDATP service is running... "
 
 systemctl list-units --type=service \
                      --state=running | grep mdatp.service | grep "loaded active running" > /dev/null 2>&1
@@ -434,6 +434,7 @@ fi
 
 create_top_scanned_files () {
 echo -e " *** Creating statistics..."
+mdatp config real-time-protection-statistics --value enabled
 mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
 
 totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
@@ -442,9 +443,10 @@ sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nr))
 
 for ((c=0; c<=4;c++)); do
 
-        nl=`grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}'` # Get number of line
+        nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
         sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
 done
+mdatp config real-time-protection-statistics --value disabled
 }
 
 tidy_up_short () {
@@ -627,9 +629,6 @@ echo ""
 echo " *** Finished connectivity test."
 
 { kill $SPIN_PID && wait $SPIN_PID; } 2>/dev/null
-#kill $SPIN_PID &>/dev/null
-
-
 }
 
 collect_info () {
@@ -734,7 +733,6 @@ sudo dmesg > $DIRNAME/dmesg.txt
 echo -ne '     ||||||||||||||||||||||||||||||||||||||[100%]\r'
 sleep 1
 echo " "
-
 }
 
 header_linux () {
@@ -759,6 +757,123 @@ else
 	echo " *** Done capturing."
 	echo " *** Capture file name: mdatpNetworkTrace.pcap"
 fi
+}
+
+calc () {
+
+    hour_minute () {
+        read -p  " *** How long do you want to capture for? (hours): " CAPTURE_PERIOD
+
+		if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+        echo "   > Capture period will be $CAPTURE_PERIOD hours."
+
+        read -p  " *** What will be your capture interval? (minutes): " CAPTURE_INTERVAL
+
+		if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+        echo "   > Capture interval will be $CAPTURE_INTERVAL minutes."
+
+        PARAM1_UP=$(echo "scale=0; ${CAPTURE_PERIOD}*3600" | bc -l)
+        #echo $PARAM1_UP
+        PARAM1_DWN=$(echo "scale=0; ${CAPTURE_INTERVAL}*60" | bc -l)
+        #echo $PARAM1_DWN
+        PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
+        #echo $PARAM1
+
+        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL minutes interval, this is your command: './lcmt.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./lcmt.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+    }
+
+    minute_second () {
+
+        read -p  " *** How long do you want to capture for? (minutes): " CAPTURE_PERIOD
+        
+
+        if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+		echo "   > Capture period will be $CAPTURE_PERIOD minutes."
+
+        read -p  " *** What will be your capture interval? (seconds): " CAPTURE_INTERVAL
+        
+        if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]*(\.[0-9]+)?$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+		echo "   > Capture interval will be $CAPTURE_INTERVAL seconds."
+
+        PARAM1_UP=$(echo "scale=1; ${CAPTURE_PERIOD}*60" | bc -l)
+        PARAM1_DWN=${CAPTURE_INTERVAL}
+        PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
+
+        echo " *** For a $CAPTURE_PERIOD minutes capture in $CAPTURE_INTERVAL seconds interval, this is your command: './lcmt.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./lcmt.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+    }
+
+    hour_second () {
+
+        read -p  " *** How long do you want to capture for? (hours): " CAPTURE_PERIOD
+        
+        if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+		echo "   > Capture period will be $CAPTURE_PERIOD hours."
+
+        read -p  " *** What will be your capture interval? (seconds): " CAPTURE_INTERVAL
+        echo "   > Capture interval will be $CAPTURE_INTERVAL seconds."
+
+        if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+        PARAM1_UP=$(echo "scale=1; ${CAPTURE_PERIOD}*3600" | bc -l)
+        PARAM1_DWN=${CAPTURE_INTERVAL}
+        PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
+
+        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL seconds interval, this is your command: './lcmt.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./lcmt.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+    }
+
+    echo " *** Pick 1, 2 or 3, according to time format to use:"
+    select option in hour-minute minute-second hour-second
+    do 
+
+        if [ $option = hour-minute ]
+        then
+            hour_minute
+        fi
+        
+
+        if [ $option = minute-second ]
+        then
+            minute_second
+        fi
+        
+        if [ $option = hour-second ]
+        then
+            hour_second
+        fi
+        exit
+    done
 }
 
 #############################################################
@@ -860,6 +975,10 @@ case $1 in
 			append_log_file
 		;;
 
+		-m)
+			calc
+		;;
+
 		-d) 
 			disclaimer
 		;;
@@ -869,20 +988,13 @@ case $1 in
 			echo "     Usage:./lcmt.sh -ps <time to capture in seconds>, performance short-mode."
 		    echo "	   ./lcmt.sh -pl <nr. of samples> <sampling interval in seconds>, performance long-mode." 
 			echo "                   Can  be used with 'nohup' and sent to background [&] in long run captures, when remote "
-			echo "                   sessions need to be disconnected. Example: 'nohup ./lcmt.sh -pl 120 0.6 &'"
+			echo "                   sessions need to be disconnected."
 			echo "	   ./lcmt.sh -d, displays disclaimer"
 			echo "	   ./lcmt.sh -ti, collects top initiators for auditd syscalls and top scans for AV."
 			echo "           ./lcmt.sh -nt <capture time, in seconds>, runs network trace on ALL interfaces."
 			echo "           ./lcmt.sh -ct, runs 'mdatp connectivity test'. Can take long if there are"
 			echo "                    connectivity issues or required MDE URLs are not whitelisted."
-			echo ""
-			echo "     Parameter table, for '-pl' option (use 'nohup' and send to background [&], if needed):"
-			echo "              One sample every hour for 24 hours: './lcmt.sh -pl 24 3600'"
-			echo "	      One sample every 30 minutes for 24 hours: './lcmt.sh -pl 48 1800'"
-			echo "	      One sample every 15 minutes for 24 hours: './lcmt.sh -pl 96 900' "
-			echo "	      One sample every 10 minutes for 24 hours: './lcmt.sh -pl 144 600'"
-			echo "	      One sample every 5 minutes for 24 hours:  './lcmt.sh -pl 288 300'"
-			echo "	      One sample every 2 minutes for 24 hours:  './lcmt.sh -pl 1440 60'"
+			echo "          ./lcmt.sh -m, calculator for time parameters for '-pl' option."
 			echo ""
 			echo "     Note on '-pl' parameters:"
 			echo "              - sampling interval: ( 0 < [int|float])"
