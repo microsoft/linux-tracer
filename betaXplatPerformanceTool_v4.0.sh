@@ -446,7 +446,6 @@ for ((c=0; c<=4;c++)); do
         nl=`grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}'` # Get number of line
         sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
 done
-sudo mdatp config real-time-protection-statistics --value disabled > /dev/null 2>&1
 }
 
 tidy_up_short () {
