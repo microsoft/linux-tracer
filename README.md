@@ -39,11 +39,11 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 
 ## Usage:
 ### From the Linux server to collect logs from, do as follows:
-- Get script package:
+- Get script:
   - wget https://aka.ms/betaxplatperformancetool -O betaXplatPerformanceTool.sh
-- Set execution permissions:
+- Adjust permissions:
   - chmod +x betaXplatPerformanceTool.sh
-- Read help dialog:
+- Read 'help' dialog:
   - ./betaXplatPerformanceTool.sh -h
 - Run 'beta Xplat Performance Tool' based on your needs (below example runs for 5 minutes, 300 seconds):
   - ./betaXplatPerformanceTool.sh -ps 300
