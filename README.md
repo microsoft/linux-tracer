@@ -1,15 +1,12 @@
-# LCMT
-Linux CPU & Memory Tracer
-
-# LCMT last available version
-Last version is v3.8
+## beta Xplat Performance Tool
+Last version is v4.0
 
 ## Context:
-LCMT is intended for Linux performance data collection, CPU and Memory load investigation and analysis, when high CPU or Memory load is reported. 
+The 'beta Xplat Performance Tool' is intended for Linux performance data collection, CPU and Memory load investigation and analysis, when high CPU or Memory load is reported. 
 It aims at quickly being able to determine a device’s CPU and Memory load and ellaborate on mitigation, as well as propose fixes.
 It's very intuitive and easy to use, returns results that are easy to interpret and relies on very basic set of tools existent in virtually all Linux minimal installations.
 ## What it does:
-LCMT captures CPU and Memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux: it does not depend on python or "Client Analyzer" code to be executed. 
+'beta Xplat Performance Tool' captures CPU and Memory data for a period of time and is at the moment, independent of “Client Analyzer” for Linux: it does not depend on python or "Client Analyzer" code to be executed. 
 It’s a command-line tool, shellscript, that receives an interval of time as parameter, and captures CPU and Memory activity for that specified period. The processes being monitored are wdavdaemon (edr, rtp and av components) and audisp plugin. Can also be used in a 'long run' mode in the background, to spot memory leaks or track resource behavior for a long time.
 
 ## Main advantages 
@@ -30,10 +27,10 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 
 ![image](https://user-images.githubusercontent.com/113130572/194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263.png)
 
-## Help dialog for LCMT v3.8:
+## Help dialog for 'beta Xplat Performance Tool.sh' v3.8:
 ![image](https://user-images.githubusercontent.com/113130572/194181096-f3ac1fba-f8e7-472c-948f-b91e997df396.png)
 
-## Executing LCMT:
+## Executing 'beta Xplat Performance Tool.sh':
 ![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
 
 ## Investigation package content:
@@ -43,19 +40,13 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 ## Usage:
 ### From the Linux server to collect logs from, do as follows:
 - Get script package:
-  - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
-- Unzip package:
-  - unzip download.zip
-- Go into script directory:
-  - cd linux-tracer-download
+  - wget https://aka.ms/betaxplatperformancetool -O betaXplatPerformanceTool.sh
 - Set execution permissions:
-  - chmod +x linux_cpu_tracer.sh
-- Read disclaimer:
-  - ./linux_cpu_tracer.sh -d
+  - chmod +x betaXplatPerformanceTool.sh
 - Read help dialog:
-  - ./linux_cpu_tracer.sh -h
-- Run LCMT based on your needs (below example runs for 5 minutes, 300 seconds):
-  - ./linux_cpu_tracer.sh -ps 300
+  - ./betaXplatPerformanceTool.sh -h
+- Run 'beta Xplat Performance Tool' based on your needs (below example runs for 5 minutes, 300 seconds):
+  - ./betaXplatPerformanceTool.sh -ps 300
 
 ### Console example of above steps:
 ![image](https://user-images.githubusercontent.com/113130572/194175150-fa8c89f8-cf3f-4148-814c-157e0226a2af.png)
