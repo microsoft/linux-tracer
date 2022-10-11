@@ -1,4 +1,4 @@
-echo "$0 $@" > lcmt.log
+echo "$0 $@" > betaXplatPerformanceTool.log
 (
 #!/bin/bash
 #
@@ -21,7 +21,7 @@ echo "$0 $@" > lcmt.log
 #                   START Define vars     				    #
 #############################################################
 
-SCRIPT_VERSION=3.9
+SCRIPT_VERSION=4.0
 
 HITS=$2
 WAIT=$3
@@ -40,7 +40,7 @@ NR_OF_PIDS=4
 MAIN_LOGFILENAME=main.txt
 
 # Define dir file name
-DIRNAME=mdatp_performance_data
+DIRNAME=betaXplatPerformanceTool
 
 # Define source ip address when remote accessing with SSH
 SSH_SRC_IP=$(echo ${SSH_CLIENT} | awk -F ' ' '{print $1}')
@@ -81,7 +81,7 @@ check_time_param () {
 #
 if ! [[ $LIMIT =~ $RE ]]
 	then
-		echo -e " *** Usage: ./lcmt.sh -s <capture time in seconds>"
+		echo -e " *** Usage: ./betaXplatPerformanceTool.sh -ps <capture time in seconds>"
 		exit 0
 fi
 }
@@ -93,35 +93,35 @@ check_time_param_long () {
 if [[ $HITS == 0 || $WAIT == 0 ]]
 	then
 		echo " *** Invalid parameter: zero is not a valid option."
-		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./betaXplatPerformanceTool.sh -pl <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if ! [[ $HITS =~ $RE ]]
 	then
 	    echo " *** Invalid parameter for number of samples: not a number or not an integer."
-		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./betaXplatPerformanceTool.sh -pl <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if ! [[ $WAIT =~ $FLOAT || $WAIT =~ $RE ]]
 	then
 		echo " *** Invalid parameter for interval in seconds: not a number"
-		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./betaXplatPerformanceTool.sh -pl <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if [ -z $HITS ]
 	then
 	    echo " *** Invalid parameter for number of samples: empty"
-		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./betaXplatPerformanceTool.sh -pl <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 
 if [ -z $WAIT ]
 	then
 		echo " *** Invalid parameter for interval in seconds: empty"
-		echo " *** Usage: ./lcmt.sh -l <nr. of samples> <interval in seconds>"
+		echo " *** Usage: ./betaXplatPerformanceTool.sh -pl <nr. of samples> <interval in seconds>"
 		exit 0
 fi
 }
@@ -404,8 +404,6 @@ mv $DIRNAME/pid4.txt $DIRNAME/4"_"$PID4_NAME.log
 
 generate_report () {
 
-# Generate report
-#
 echo -e " *** Creating 'report.txt' file..."
 
 for (( i = 1; i <= $NR_OF_PIDS; i++ ))
@@ -433,20 +431,23 @@ fi
 }
 
 create_top_scanned_files () {
-echo -e " *** Creating statistics..."
-mdatp config real-time-protection-statistics --value enabled
+echo " *** Creating statistics..."
+sudo mdatp config real-time-protection-statistics --value enabled > /dev/null 2>&1
 mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
 
 totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
-
 sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nr))
 
-for ((c=0; c<=4;c++)); do
-
-        nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
-        sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+for ((c=0; c<=4;c++))
+do       
+	if((! ${sortedFiles[$c]} == 0))
+	then
+		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
+		sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+	else
+		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
+	fi
 done
-mdatp config real-time-protection-statistics --value disabled
 }
 
 tidy_up_short () {
@@ -502,7 +503,22 @@ echo -e " *** Done. "
 
 append_log_file () {
 
-sudo zip -g $PACKAGE_NAME lcmt.log
+sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool.log
+}
+
+append_pid_files () {
+
+if [ -f /tmp/betaXplatPerformanceTool_start-$DATE_START.pid ]
+	then 
+		cp /tmp/betaXplatPerformanceTool_start-$DATE_START.pid .
+		sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool_start-$DATE_START.pid
+fi
+
+if [ -f /tmp/betaXplatPerformanceTool_stop-$DATE_STOP.pid ]
+	then 
+		cp /tmp/betaXplatPerformanceTool_stop-$DATE_STOP.pid .
+		sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool_stop-$DATE_STOP.pid
+fi
 }
 
 long_run () {
@@ -528,13 +544,13 @@ echo " *** Collecting $HITS samples in $WAIT second intervals"
 
 get_pid_init () {
 DATE_START=$(date +%d.%m.%Y_%HH%MM%Ss)
-rm -rf /tmp/lcmt*
-bash -c 'echo $PPID' > /tmp/lcmt_start-$DATE_START.pid
+rm -rf /tmp/betaXplatPerformanceTool*
+bash -c 'echo $PPID' > /tmp/betaXplatPerformanceTool_start-$DATE_START.pid
 }
 
 get_pid_stop () {
 DATE_STOP=$(date +%d.%m.%Y_%HH%MM%Ss)
-cp /tmp/lcmt_start-$DATE_START.pid /tmp/lcmt_stop-$DATE_STOP.pid
+cp /tmp/betaXplatPerformanceTool_start-$DATE_START.pid /tmp/betaXplatPerformanceTool_stop-$DATE_STOP.pid
 }
 
 disclaimer () {
@@ -555,7 +571,7 @@ echo "**************************************************************************
 auditd_initiators () {
 
 sudo bash <<"EOF"
-DIRNAME=mdatp_performance_data
+DIRNAME=betaXplatPerformanceTool
 echo "Top keys:" > $DIRNAME/auditd_initiators.txt
 cat /var/log/audit/audit.* | grep type=SYSCALL | awk -F ' ' '{print $28}' | sort | uniq -c | sort -rn | head -n 10 >> $DIRNAME/auditd_initiators.txt
 echo "" >> $DIRNAME/auditd_initiators.txt
@@ -736,8 +752,8 @@ echo " "
 }
 
 header_linux () {
-echo " -------------- $(date) -------------- "
-echo " ----------- Running CPU tracer for Linux (v$SCRIPT_VERSION)-----------"
+echo " ---------------- $(date) -----------------"
+echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) -----------"
 }
 
 network_trace () {
@@ -789,8 +805,8 @@ calc () {
         PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
         #echo $PARAM1
 
-        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL minutes interval, this is your command: './lcmt.sh -pl $PARAM1 $PARAM1_DWN'"
-        echo " *** Use 'nohup ./lcmt.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL minutes interval, this is your command: './betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
     }
 
     minute_second () {
@@ -820,8 +836,8 @@ calc () {
         PARAM1_DWN=${CAPTURE_INTERVAL}
         PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
 
-        echo " *** For a $CAPTURE_PERIOD minutes capture in $CAPTURE_INTERVAL seconds interval, this is your command: './lcmt.sh -pl $PARAM1 $PARAM1_DWN'"
-        echo " *** Use 'nohup ./lcmt.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+        echo " *** For a $CAPTURE_PERIOD minutes capture in $CAPTURE_INTERVAL seconds interval, this is your command: './betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
     }
 
     hour_second () {
@@ -849,8 +865,8 @@ calc () {
         PARAM1_DWN=${CAPTURE_INTERVAL}
         PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
 
-        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL seconds interval, this is your command: './lcmt.sh -pl $PARAM1 $PARAM1_DWN'"
-        echo " *** Use 'nohup ./lcmt.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL seconds interval, this is your command: './betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
     }
 
     echo " *** Pick 1, 2 or 3, according to time format to use:"
@@ -927,6 +943,7 @@ case $1 in
 			package_and_compress
 			append_log_file
 			get_pid_stop
+			append_pid_files
 		;;
 		
 		-ti)
@@ -984,22 +1001,22 @@ case $1 in
 		;;
 		
 		-h) 
-			echo "     ==================================== Linux CPU and Memory Tracer ==================================="
-			echo "     Usage:./lcmt.sh -ps <time to capture in seconds>, performance short-mode."
-		    echo "	   ./lcmt.sh -pl <nr. of samples> <sampling interval in seconds>, performance long-mode." 
+			echo "     ======================================= Linux CPU and Memory Tracer ==========================================="
+			echo "     Usage:./betaXplatPerformanceTool.sh -ps <time to capture in seconds>, performance short-mode."
+		    echo "	   ./betaXplatPerformanceTool.sh -pl <nr. of samples> <sampling interval in seconds>, performance long-mode." 
 			echo "                   Can  be used with 'nohup' and sent to background [&] in long run captures, when remote "
 			echo "                   sessions need to be disconnected."
-			echo "	   ./lcmt.sh -d, displays disclaimer"
-			echo "	   ./lcmt.sh -ti, collects top initiators for auditd syscalls and top scans for AV."
-			echo "           ./lcmt.sh -nt <capture time, in seconds>, runs network trace on ALL interfaces."
-			echo "           ./lcmt.sh -ct, runs 'mdatp connectivity test'. Can take long if there are"
+			echo "	   ./betaXplatPerformanceTool.sh -d, displays disclaimer"
+			echo "	   ./betaXplatPerformanceTool.sh -ti, collects top initiators for auditd syscalls and top scans for AV."
+			echo "           ./betaXplatPerformanceTool.sh -nt <capture time, in seconds>, runs network trace on ALL interfaces."
+			echo "           ./betaXplatPerformanceTool.sh -ct, runs 'mdatp connectivity test'. Can take long if there are"
 			echo "                    connectivity issues or required MDE URLs are not whitelisted."
-			echo "          ./lcmt.sh -m, calculator for time parameters for '-pl' option."
+			echo "          ./betaXplatPerformanceTool.sh -m, calculator for time parameters for '-pl' option."
 			echo ""
 			echo "     Note on '-pl' parameters:"
 			echo "              - sampling interval: ( 0 < [int|float])"
 			echo "	      - nr. of samples: ( 0 < [int])"
-			echo "     ===================================================================================================="
+			echo "     ==============================================================================================================="
 		;;
 		
 		*) 
@@ -1010,5 +1027,5 @@ esac
 #
 # EOF
 #
-) 2>&1 | tee -a lcmt.log
+) 2>&1 | tee -a betaXplatPerformanceTool.log
 
