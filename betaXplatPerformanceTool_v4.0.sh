@@ -404,8 +404,6 @@ mv $DIRNAME/pid4.txt $DIRNAME/4"_"$PID4_NAME.log
 
 generate_report () {
 
-# Generate report
-#
 echo -e " *** Creating 'report.txt' file..."
 
 for (( i = 1; i <= $NR_OF_PIDS; i++ ))
@@ -445,8 +443,10 @@ for ((c=0; c<=4;c++)); do
        
 	if((! ${sortedFiles[$c]} == 0))
 	then
-		nl=`grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}'` # Get number of line
+		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
 		sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+	else
+		echo "No statistics available." > rtp_statistics.txt
 	fi
 done
 }
