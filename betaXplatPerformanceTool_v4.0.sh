@@ -436,17 +436,16 @@ sudo mdatp config real-time-protection-statistics --value enabled > /dev/null 2>
 mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
 
 totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
-
 sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nr))
 
-for ((c=0; c<=4;c++)); do
-       
+for ((c=0; c<=4;c++))
+do       
 	if((! ${sortedFiles[$c]} == 0))
 	then
 		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
 		sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
 	else
-		echo "No statistics available." > rtp_statistics.txt
+		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
 	fi
 done
 }
