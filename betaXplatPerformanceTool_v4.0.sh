@@ -514,10 +514,10 @@ if [ -f /tmp/betaXplatPerformanceTool_start-$DATE_START.pid ]
 		sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool_start-$DATE_START.pid
 fi
 
-if [ -f /tmp/betaXplatPerformanceTool_start-$DATE_START.pid ]
+if [ -f /tmp/betaXplatPerformanceTool_stop-$DATE_START.pid ]
 	then 
 		cp /tmp/betaXplatPerformanceTool_stop-$DATE_START.pid .
-		sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool_start-$DATE_START.pid
+		sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool_stop-$DATE_START.pid
 fi
 }
 
