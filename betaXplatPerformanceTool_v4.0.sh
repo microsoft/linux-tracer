@@ -521,7 +521,6 @@ if [ -f /tmp/betaXplatPerformanceTool_start-$DATE_START.pid ]
 fi
 }
 
-
 long_run () {
 
 for (( i = 1; i <= $HITS; i++ ))
