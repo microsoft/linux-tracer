@@ -510,13 +510,13 @@ append_pid_files () {
 
 if [ -f /tmp/betaXplatPerformanceTool_start-$DATE_START.pid ]
 	then 
-		cp betaXplatPerformanceTool_start-$DATE_START.pid .
+		cp /tmp/betaXplatPerformanceTool_start-$DATE_START.pid .
 		sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool_start-$DATE_START.pid
 fi
 
 if [ -f /tmp/betaXplatPerformanceTool_start-$DATE_START.pid ]
 	then 
-		cp betaXplatPerformanceTool_start-$DATE_START.pid .
+		cp /tmp/betaXplatPerformanceTool_start-$DATE_START.pid .
 		sudo zip -g $PACKAGE_NAME betaXplatPerformanceTool_start-$DATE_START.pid
 fi
 }
