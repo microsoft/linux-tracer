@@ -437,12 +437,12 @@ mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log #
 
 totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
 sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nru))
-echo ${sortedFiles[*]}
+
 for ((c=0; c<=4;c++))
 do       
 	if((! ${sortedFiles[$c]} == 0))
 	then
-		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
+		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | head -1 | awk -F ':' '{print $1}') # Get number of line
 		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
 
 	else
@@ -567,6 +567,12 @@ echo "interruption, loss of business information, or other pecuniary loss) arisi
 echo "inability to use the sample scripts or documentation, even if Microsoft has been advised of the "
 echo "possibility of such damages."
 echo "*************************************************************************************************"
+echo "Do you agree with running the scirpt after reading the above disclaimer? [y]Yes; [n]No"
+read consentment
+if  [ ! $consentment == "y" ]; 
+then
+	exit 0;
+fi
 }
 
 auditd_initiators () {
@@ -900,6 +906,7 @@ calc () {
 case $1 in
 
 		-ps)
+			disclaimer
 			header_linux
 			check_time_param
 			check_mdatp_running
@@ -923,7 +930,8 @@ case $1 in
 			append_log_file
 		;;
 		
-		-pl) 
+		-pl)
+			disclaimer
 			get_pid_init
 			header_linux
 			check_time_param_long
@@ -948,6 +956,7 @@ case $1 in
 		;;
 		
 		-ti)
+			disclaimer
 			header_linux
 			check_mdatp_running
 			check_requirements
@@ -962,6 +971,7 @@ case $1 in
 			append_log_file
 		;;
 		-nt)
+			disclaimer
 			header_linux
             check_mdatp_running
             check_requirements
@@ -978,6 +988,7 @@ case $1 in
 		;;
 		
 		-ct)
+			disclaimer
 			header_linux
             check_mdatp_running
             check_requirements
