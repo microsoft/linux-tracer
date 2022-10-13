@@ -400,7 +400,7 @@ mv $DIRNAME/plot/graphs/cpu_plot.plt $DIRNAME/plot/graphs/mem_plot.plt $DIRNAME/
 
 clean_house () {
 	rm -rf $DIRNAME/log $DIRNAME/main $DIRNAME/raw
-	rm -rf $DIRNAME/real_time_protection.json $DIRNAME/high_cpu_parser.py $DIRNAME/real_time_protection_temp.log
+	rm -rf $DIRNAME/report/cpuinfo.txt
 }
 
 package_and_compress () {
@@ -685,7 +685,7 @@ case $1 in
 		    echo "	   ./betaXplatPerformanceTool.sh -pl <nr. of samples> <sampling interval in seconds>, performance long-mode." 
 			echo "                   Can  be used with 'nohup' and sent to background [&] in long run captures, when remote "
 			echo "                   sessions need to be disconnected."
-			echo "          ./betaXplatPerformanceTool.sh -m, calculator for time parameters for '-pl' option."
+			echo "           ./betaXplatPerformanceTool.sh -m, calculator for time parameters for '-pl' option."
 			echo ""
 			echo "     Note on '-pl' parameters:"
 			echo "              - sampling interval: ( 0 < [int|float])"
