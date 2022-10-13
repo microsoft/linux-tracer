@@ -38,32 +38,27 @@ SSH_SRC_IP=$(echo ${SSH_CLIENT} | awk -F ' ' '{print $1}')
 #                  START Define Functions				    #
 #############################################################
 
-# Create dir to host performance files (if it does not exist yet)
-#
+get_cpuinfo () {
+cat /proc/cpuinfo | grep processor > $DIRNAME/cpuinfo.txt
+}
+
 create_dir_struct () {
 echo -e " *** Checking if '$DIRNAME' dir exists..."
 
 if [ -d "$DIRNAME" ]
    then
-		# Dir exists. No need to create. Clean existent files and moving on.
-		#
 		echo -e " *** '$DIRNAME' exists. Deleting..."
 		sudo rm -rf $DIRNAME/*
 		
 		echo -e " *** Done deleting old files."
 		
 	else
-		# Dir does nor exist. Create.
-		#
 		echo -e " *** '$DIRNAME' does not exist. Creating..." 	  
 		mkdir $DIRNAME
 fi
 }
 
 check_time_param () {
-
-# Test time capture parameter. If we don't provide a number of seconds, exit.
-#
 if ! [[ $LIMIT =~ $RE ]]
 	then
 		echo -e " *** Usage: ./betaXplatPerformanceTool.sh -ps <capture time in seconds>"
@@ -72,9 +67,6 @@ fi
 }
 
 check_time_param_long () {
-
-# Test time capture parameter. If we don't have meaningful parameters, exit.
-#
 if [[ $HITS == 0 || $WAIT == 0 ]]
 	then
 		echo " *** Invalid parameter: zero is not a valid option."
@@ -112,7 +104,6 @@ fi
 }
 
 feed_stats () {
-
 for (( i = 1; i <= $NR_OF_PIDS; i++ ))
 do
 	cat $DIRNAME/pid$i.txt | awk -F ' ' '{ print $2 }' > $DIRNAME/pid$i.cpu.t
@@ -136,7 +127,6 @@ done
 }
 
 check_requirements () {
-
 ZIP=$(which zip 2>/dev/null)
 SED=$(which sed 2>/dev/null)
 AWK=$(which awk 2>/dev/null)
@@ -193,9 +183,7 @@ fi
 }
 
 check_mdatp_running () {
-
 echo -e " *** Checking if MDATP is installed..."
-
 which mdatp > /dev/null 2>&1
 
 if [ $? != 0 ]
@@ -223,7 +211,6 @@ fi
 }
 
 loop() {
-
 for (( i = 1; i <= $LIMIT; i++ ))
 do
   echo $(date)
@@ -235,7 +222,6 @@ done
 }
 
 loop_long() {
-
 for (( i = 1; i <= $HITS; i++ ))
 do
   echo $(date)
@@ -246,7 +232,6 @@ done
 }
 
 count() {
-
 INIT=1
 while [ $INIT -lt $LIMIT ]
 do
@@ -257,7 +242,6 @@ done
 }
 
 feed_data () {
-
 PID1=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '1q;d')
 PID2=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '2q;d')
 PID3=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '3q;d')
@@ -272,7 +256,6 @@ cat $DIRNAME/$MAIN_LOGFILENAME | awk -F ' ' '{ print $1, $9, $10, $12, $13 }' | 
 }
 
 create_plotting_files () {
-
 echo " *** Creating plotting files..."
 
 # Create X axis
@@ -368,7 +351,6 @@ mv $DIRNAME/pid4.txt $DIRNAME/4"_"$PID4_NAME.log
 }
 
 generate_report () {
-
 echo -e " *** Creating 'report.txt' file..."
 
 for (( i = 1; i <= $NR_OF_PIDS; i++ ))
@@ -380,7 +362,6 @@ for (( i = 1; i <= $NR_OF_PIDS; i++ ))
 }
 
 check_rtp_enabled () {
-
 mdatp health --field real_time_protection_enabled > /dev/null 2>&1
 
 if [ $? != 0 ]
@@ -394,7 +375,6 @@ fi
 }
 
 tidy_up () {
-
 mkdir $DIRNAME/plot $DIRNAME/report $DIRNAME/log $DIRNAME/main $DIRNAME/raw  
 mkdir $DIRNAME/plot/graphs
 mv $DIRNAME/main.txt $DIRNAME/main
@@ -407,7 +387,6 @@ mv $DIRNAME/plot/graphs/cpu_plot.plt $DIRNAME/plot/graphs/mem_plot.plt $DIRNAME/
 }
 
 tidy_up_long () {
-
 mkdir $DIRNAME/plot $DIRNAME/report $DIRNAME/log $DIRNAME/main $DIRNAME/raw  
 mkdir $DIRNAME/plot/graphs
 mv $DIRNAME/main.txt $DIRNAME/main
@@ -420,13 +399,11 @@ mv $DIRNAME/plot/graphs/cpu_plot.plt $DIRNAME/plot/graphs/mem_plot.plt $DIRNAME/
 }
 
 clean_house () {
-
 	rm -rf $DIRNAME/log $DIRNAME/main $DIRNAME/raw
 	rm -rf $DIRNAME/real_time_protection.json $DIRNAME/high_cpu_parser.py $DIRNAME/real_time_protection_temp.log
 }
 
 package_and_compress () {
-
 echo -e " *** Packaging & compressing '$DIRNAME'... "
 
 DATE_Z=$(date +%d.%m.%Y_%HH%MM%Ss)
