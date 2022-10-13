@@ -436,14 +436,15 @@ sudo mdatp config real-time-protection-statistics --value enabled > /dev/null 2>
 mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
 
 totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
-sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nr))
+sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nru))
 
 for ((c=0; c<=4;c++))
 do       
 	if((! ${sortedFiles[$c]} == 0))
 	then
-		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
-		sed -n $(($nl-4)),$(($nl+3))p $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Print process
+		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | head -1 | awk -F ':' '{print $1}') # Get number of line
+		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
+
 	else
 		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
 	fi
@@ -554,18 +555,32 @@ cp /tmp/betaXplatPerformanceTool_start-$DATE_START.pid /tmp/betaXplatPerformance
 }
 
 disclaimer () {
-echo "********************************** DISCLAIMER ***************************************************"
-echo "This sample script is not supported under any Microsoft standard support program or service."
-echo "The sample script is provided “AS IS” without warranty of any kind. Microsoft further disclaims"
-echo "all implied warranties including, without limitation, any implied warranties of merchantability" 
-echo "or of fitness for a particular purpose. The entire risk arising out of the use or performance of"
-echo "the sample scripts and documentation remains with you. In no event shall Microsoft, its authors,"
-echo "or anyone else involved in the creation, production, or delivery of the scripts be liable for any" 
-echo "damages whatsoever (including, without limitation, damages for loss of business profits, business"
-echo "interruption, loss of business information, or other pecuniary loss) arising out of the use of or" 
-echo "inability to use the sample scripts or documentation, even if Microsoft has been advised of the "
-echo "possibility of such damages."
-echo "*************************************************************************************************"
+
+if ! [ -f .consent.txt ]
+then 
+
+	echo "********************************** DISCLAIMER ***************************************************"
+	echo "This sample script is not supported under any Microsoft standard support program or service."
+	echo "The sample script is provided “AS IS” without warranty of any kind. Microsoft further disclaims"
+	echo "all implied warranties including, without limitation, any implied warranties of merchantability" 
+	echo "or of fitness for a particular purpose. The entire risk arising out of the use or performance of"
+	echo "the sample scripts and documentation remains with you. In no event shall Microsoft, its authors,"
+	echo "or anyone else involved in the creation, production, or delivery of the scripts be liable for any" 
+	echo "damages whatsoever (including, without limitation, damages for loss of business profits, business"
+	echo "interruption, loss of business information, or other pecuniary loss) arising out of the use of or" 
+	echo "inability to use the sample scripts or documentation, even if Microsoft has been advised of the "
+	echo "possibility of such damages."
+	echo "*************************************************************************************************"
+	echo "Do you agree with running the script after reading the above disclaimer? [y]Yes [n]No"
+
+	read consent
+	if  [ ! $consent == "y" ]
+	then
+		exit 0
+	fi
+	
+	touch .consent.txt
+fi
 }
 
 auditd_initiators () {
@@ -899,6 +914,7 @@ calc () {
 case $1 in
 
 		-ps)
+			disclaimer
 			header_linux
 			check_time_param
 			check_mdatp_running
@@ -922,7 +938,8 @@ case $1 in
 			append_log_file
 		;;
 		
-		-pl) 
+		-pl)
+			disclaimer
 			get_pid_init
 			header_linux
 			check_time_param_long
@@ -947,6 +964,7 @@ case $1 in
 		;;
 		
 		-ti)
+			disclaimer
 			header_linux
 			check_mdatp_running
 			check_requirements
@@ -961,6 +979,7 @@ case $1 in
 			append_log_file
 		;;
 		-nt)
+			disclaimer
 			header_linux
             check_mdatp_running
             check_requirements
@@ -977,6 +996,7 @@ case $1 in
 		;;
 		
 		-ct)
+			disclaimer
 			header_linux
             check_mdatp_running
             check_requirements
