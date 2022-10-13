@@ -6,7 +6,7 @@ echo "$0 $@" > betaXplatPerformanceTool.log
 #                   START Define vars     				    #
 #############################################################
 
-SCRIPT_VERSION=4.0
+SCRIPT_VERSION=4.1
 
 HITS=$2
 WAIT=$3
