@@ -27,16 +27,6 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 
 ![image](https://user-images.githubusercontent.com/113130572/194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263.png)
 
-## Help dialog for 'beta Xplat Performance Tool.sh' v3.8:
-![image](https://user-images.githubusercontent.com/113130572/194181096-f3ac1fba-f8e7-472c-948f-b91e997df396.png)
-
-## Executing 'beta Xplat Performance Tool.sh':
-![image](https://user-images.githubusercontent.com/113130572/194163405-f1d9c038-dce2-4da3-aa41-126849ace0bb.png)
-
-## Investigation package content:
-![image](https://user-images.githubusercontent.com/113130572/194172441-2f072ffb-9360-40b4-8291-bc1a43a259cf.png)
-![image](https://user-images.githubusercontent.com/113130572/194172355-9d9f2ac5-ad07-4a38-9534-9561164a151c.png)
-
 ## Usage:
 ### From the Linux server to collect logs from, do as follows:
 - Get script:
@@ -47,10 +37,6 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
   - ./betaXplatPerformanceTool.sh -h
 - Run 'beta Xplat Performance Tool' based on your needs (below example runs for 5 minutes, 300 seconds):
   - ./betaXplatPerformanceTool.sh -ps 300
-
-### Console example of above steps:
-![image](https://user-images.githubusercontent.com/113130572/194175150-fa8c89f8-cf3f-4148-814c-157e0226a2af.png)
-After having the investigation package available as per above, transfer it to your local device and investigate data.
 
 ## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
