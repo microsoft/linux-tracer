@@ -1,22 +1,7 @@
-echo "$0 $@" > betaXplatPerformanceTool.log
-(
 #!/bin/bash
 #
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! DISCLAIMER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#
-# This sample script is not supported under any Microsoft standard support program or service.
-# The sample script is provided “AS IS” without warranty of any kind. Microsoft further disclaims 
-# all implied warranties including, without limitation, any implied warranties of merchantability 
-# or of fitness for a particular purpose. The entire risk arising out of the use or performance of 
-# the sample scripts and documentation remains with you. In no event shall Microsoft, its authors, 
-# or anyone else involved in the creation, production, or delivery of the scripts be liable for any 
-# damages whatsoever (including, without limitation, damages for loss of business profits, business 
-# interruption, loss of business information, or other pecuniary loss) arising out of the use of or 
-# inability to use the sample scripts or documentation, even if Microsoft has been advised of the 
-# possibility of such damages.
-#
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! DISCLAIMER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+echo "$0 $@" > betaXplatPerformanceTool.log
+(
 #############################################################
 #                   START Define vars     				    #
 #############################################################
@@ -126,8 +111,6 @@ if [ -z $WAIT ]
 fi
 }
 
-# Feed CPU and RAM statistics inside each PID file.
-#
 feed_stats () {
 
 for (( i = 1; i <= $NR_OF_PIDS; i++ ))
@@ -152,8 +135,6 @@ do
 done
 }
 
-# Check if ZIP is installed
-#
 check_requirements () {
 
 ZIP=$(which zip 2>/dev/null)
@@ -211,8 +192,6 @@ then
 fi
 }
 
-# Checks if MDATP is installed
-# 
 check_mdatp_running () {
 
 echo -e " *** Checking if MDATP is installed..."
@@ -243,14 +222,6 @@ if [ $? != 0 ]
 fi
 }
 
-# Wait function
-#
-pause_ () {
-	sleep 1
- }
-
-# Function to gather CPU load, and RAM data
-#
 loop() {
 
 for (( i = 1; i <= $LIMIT; i++ ))
@@ -274,8 +245,6 @@ do
 done
 }
 
-# Function to inform user on data gathering progress
-#
 count() {
 
 INIT=1
@@ -289,8 +258,6 @@ done
 
 feed_data () {
 
-# Define PID extraction vars (after main file $MAIN_LOGFILENAME' is created)
-#
 PID1=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '1q;d')
 PID2=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '2q;d')
 PID3=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '3q;d')
@@ -298,8 +265,6 @@ PID4=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | t
 
 echo -e " *** Creating log files for analysis..."
 
-# Feeding data to files
-#
 cat $DIRNAME/$MAIN_LOGFILENAME | awk -F ' ' '{ print $1, $9, $10, $12, $13 }' | grep $PID1 >> $DIRNAME/pid1.txt
 cat $DIRNAME/$MAIN_LOGFILENAME | awk -F ' ' '{ print $1, $9, $10, $12, $13 }' | grep $PID2 >> $DIRNAME/pid2.txt
 cat $DIRNAME/$MAIN_LOGFILENAME | awk -F ' ' '{ print $1, $9, $10, $12, $13 }' | grep $PID3 >> $DIRNAME/pid3.txt
@@ -416,8 +381,6 @@ for (( i = 1; i <= $NR_OF_PIDS; i++ ))
 
 check_rtp_enabled () {
 
-# Check RTP enabled
-#
 mdatp health --field real_time_protection_enabled > /dev/null 2>&1
 
 if [ $? != 0 ]
@@ -428,34 +391,6 @@ if [ $? != 0 ]
 	else
 		echo -e " *** Real Time Protection is enabled. [OK]"
 fi
-}
-
-create_top_scanned_files () {
-echo " *** Creating statistics..."
-sudo mdatp config real-time-protection-statistics --value enabled > /dev/null 2>&1
-mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
-
-totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
-sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nru))
-
-for ((c=0; c<=4;c++))
-do       
-	if((! ${sortedFiles[$c]} == 0))
-	then
-		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | head -1 | awk -F ':' '{print $1}') # Get number of line
-		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
-
-	else
-		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
-	fi
-done
-}
-
-tidy_up_short () {
-
-mkdir $DIRNAME/report $DIRNAME/log
-mv $DIRNAME/*.txt $DIRNAME/report
-mv $DIRNAME/*.log $DIRNAME/log
 }
 
 tidy_up () {
@@ -580,213 +515,6 @@ then
 	fi
 	
 	touch .consent.txt
-fi
-}
-
-auditd_initiators () {
-
-sudo bash <<"EOF"
-DIRNAME=betaXplatPerformanceTool
-echo "Top keys:" > $DIRNAME/auditd_initiators.txt
-cat /var/log/audit/audit.* | grep type=SYSCALL | awk -F ' ' '{print $28}' | sort | uniq -c | sort -rn | head -n 10 >> $DIRNAME/auditd_initiators.txt
-echo "" >> $DIRNAME/auditd_initiators.txt
-
-echo "Top types:" >> $DIRNAME/auditd_initiators.txt
-cat /var/log/audit/audit.* | awk -F ' ' '{print $1}' | sort | uniq -c | sort -rn | head -n 10 >> $DIRNAME/auditd_initiators.txt
-echo "" >> $DIRNAME/auditd_initiators.txt
-
-echo "Top syscalls by count:" >> $DIRNAME/auditd_initiators.txt
-cat /var/log/audit/audit.* | grep type=SYSCALL | awk -F ' ' '{print $4}' | sort | uniq -c | sort -rn >> $DIRNAME/auditd_initiators.txt
-echo "" >> $DIRNAME/auditd_initiators.txt
-
-echo "Top initiators:" >> $DIRNAME/auditd_initiators.txt
-cat /var/log/audit/audit.* | grep type=SYSCALL | awk -F ' ' '{print $26}' | sort | uniq -c | sort -rn | head -n 10 >> $DIRNAME/auditd_initiators.txt
-echo "" >> $DIRNAME/auditd_initiators.txt
-
-echo "Top syscalls by initiators:" >> $DIRNAME/auditd_initiators.txt
-cat /var/log/audit/audit.* | grep type=SYSCALL | awk -F ' ' '{print $4, $26, $28}' | sort | uniq -c | sort -k1rn | head -n 10 >> $DIRNAME/auditd_initiators.txt
-echo "" >> $DIRNAME/auditd_initiators.txt
-EOF
-
-}
-
-spin() {
-spinner="/|\\-/|\\-"
-  while :
-  do
-    for i in `seq 0 7`
-    do
-      echo -en "${spinner:$i:1}"
-      echo -en "\010"
-      sleep 0.1
-    done
-  done
-}
-
-mdatp_connectivity_test () {
-
-spin &
-SPIN_PID=$!
-
-# execute mdatp connectivity test
-echo -ne " *** Running 'mdatp connectivity test' (can be long)..."
-mdatp connectivity test > $DIRNAME/mdatp_conectivity_test.txt
-
-# Redirect ERROR files to mdatp_conectivity_test_ERROR.txt file
-cat $DIRNAME/mdatp_conectivity_test.txt | grep ERROR | awk -F ' ' '{print $4}'  > $DIRNAME/mdatp_conectivity_test_ERROR.txt
-
-(
-# If mdatp_conectivity_test_ERROR.txt exists and is not empty, feed it to cURL
-if [ -s $DIRNAME/mdatp_conectivity_test_ERROR.txt ]
-then
-        while read -r URL
-        do
-           curl --connect-timeout 5 -v $URL
-        done < $DIRNAME/mdatp_conectivity_test_ERROR.txt
-fi
-
-) 2>&1 | tee -a $DIRNAME/mdatp_conectivity_test_DEBUG.txt >/dev/null ## redirect shell output to mdatp_conectivity_test_DEBUG.txt
-
-# If mdatp_conectivity_test_DEBUG.txt is empty, remove it
-if ! [ -s $DIRNAME/mdatp_conectivity_test_DEBUG.txt ]
-then
-        rm -rf $DIRNAME/mdatp_conectivity_test_DEBUG.txt
-fi
-
-# Always remove mdatp_conectivity_test_ERROR.txt as this is only a helper file
-rm -rf $DIRNAME/mdatp_conectivity_test_ERROR.txt
-
-echo ""
-echo " *** Finished connectivity test."
-
-{ kill $SPIN_PID && wait $SPIN_PID; } 2>/dev/null
-}
-
-collect_info () {
-
-echo " *** Fetching system configuration..."
-
-echo -ne ' *** Initiating job...                     [0%]\r'
-sleep 0.5
-
-#1
-echo -ne ' *** Initiating job... waiting...          [0%]\r'
-sleep 0.5
-
-#2
-mkdir -p $DIRNAME/mde_diagnostics/etc/opt/microsoft
-sudo cp -r /etc/opt/microsoft/mdatp  $DIRNAME/mde_diagnostics/etc/opt/microsoft
-echo -ne '     |                                     [4%]\r'
-sleep 0.2
-
-#3
-mkdir -p $DIRNAME/mde_diagnostics/var/log/microsoft/mdatp/
-sudo cp -r /var/log/microsoft/mdatp/* $DIRNAME/mde_diagnostics/var/log/microsoft/mdatp/
-echo -ne '     |||                                   [11%]\r'
-sleep 0.2
-
-#4
-mkdir -p $DIRNAME/mde_diagnostics/var/opt/microsoft/mdatp/
-sudo cp -r /var/opt/microsoft/mdatp/* $DIRNAME/mde_diagnostics/var/opt/microsoft/mdatp/
-cd $DIRNAME
-sudo zip -r mde_diagnostics.zip mde_diagnostics > /dev/null 2>&1
-sudo rm -rf mde_diagnostics
-cd ../
-
-#5
-echo -ne '     |||||                                 [19%]\r'
-sleep 0.2
-
-#6
-cp /etc/os-release $DIRNAME/os-release.txt
-sudo cp /etc/audisp/audispd.conf $DIRNAME/audispd_conf.txt
-sudo cp /etc/audit/rules.d/audit.rules $DIRNAME/audit_rules_conf.txt
-echo -ne '     ||||||                                [28%]\r'
-sleep 0.2
-
-#7
-free -h > $DIRNAME/free.txt
-echo -ne '     ||||||||                              [30%]\r'
-sleep 0.2
-
-#8
-cat /proc/cpuinfo | grep processor > $DIRNAME/cpuinfo.txt
-echo -ne '     |||||||||||                           [33%]\r'
-sleep 0.2
-
-#9
-mdatp health > $DIRNAME/health.txt
-echo -ne '     |||||||||||||                         [39%]\r'
-sleep 0.2
-
-#10
-df -h > $DIRNAME/df.txt
-echo -ne '     |||||||||||||||                       [45%]\r'
-sleep 0.2
-
-#11
-pstree > $DIRNAME/pstree.txt
-echo -ne '     |||||||||||||||||                     [51%]\r'
-sleep 0.2
-
-#12
-ps -ef > $DIRNAME/psef.txt
-echo -ne '     |||||||||||||||||||                   [57%]\r'
-sleep 0.2
-
-#13
-uname -a > $DIRNAME/uname-a.txt
-echo -ne '     |||||||||||||||||||||                 [62%]\r'
-sleep 0.2
-
-#16
-mdatp exclusion list > $DIRNAME/mdatp_exclusion_list.txt
-echo -ne '     |||||||||||||||||||||||||||           [77%]\r'
-sleep 0.2
-
-#17
-sudo auditctl -l > $DIRNAME/auditd_exclusion_list.txt
-echo -ne '     ||||||||||||||||||||||||||||||        [83%]\r'
-sleep 0.2
-
-#18
-sudo service auditd status > $DIRNAME/service_auditd_status.txt 2>/dev/null
-echo -ne '     |||||||||||||||||||||||||||||||||     [91%]\r'
-sleep 0.2
-
-#19
-sudo service mdatp status > $DIRNAME/service_mdatp_status.txt 2>/dev/null
-echo -ne '     ||||||||||||||||||||||||||||||||||||| [99%]\r'
-sleep 0.2
-
-#20
-sudo dmesg > $DIRNAME/dmesg.txt
-echo -ne '     ||||||||||||||||||||||||||||||||||||||[100%]\r'
-sleep 1
-echo " "
-}
-
-header_linux () {
-echo " ---------------- $(date) -----------------"
-echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) -----------"
-}
-
-network_trace () {
-
-TCPDUMP=$(which tcpdump 2>/dev/null)
-
-echo " *** Checking if tcpdump is installed..."
-
-if [ -z $TCPDUMP ]
-then
-	echo " *** Tcpdump not found: required for network capture."
-	echo " *** Exiting."
-	exit 0
-else	
-	echo " *** Capturing network packets for $LIMIT seconds..."
-	sudo timeout $LIMIT $TCPDUMP not src host $SSH_SRC_IP and not dst host $SSH_SRC_IP -w $DIRNAME/mdatpNetworkTrace.pcap 2> /dev/null | count
-	echo " *** Done capturing."
-	echo " *** Capture file name: mdatpNetworkTrace.pcap"
 fi
 }
 
@@ -920,7 +648,6 @@ case $1 in
 			check_mdatp_running
 			check_requirements
 			create_dir_struct
-			collect_info
 			echo_loop
 			loop > $DIRNAME/$MAIN_LOGFILENAME | count
 			feed_data
@@ -929,9 +656,6 @@ case $1 in
 			create_plotting_files
 			create_plot_graph
 			generate_report
-			check_rtp_enabled
-			create_top_scanned_files
-			auditd_initiators
 			tidy_up
 			clean_house
 			package_and_compress
@@ -946,7 +670,6 @@ case $1 in
 			check_mdatp_running
 			check_requirements
 			create_dir_struct
-			collect_info
 			echo_loop_long
 			loop_long > $DIRNAME/$MAIN_LOGFILENAME
 			feed_data
@@ -963,55 +686,6 @@ case $1 in
 			append_pid_files
 		;;
 		
-		-ti)
-			disclaimer
-			header_linux
-			check_mdatp_running
-			check_requirements
-			create_dir_struct
-			collect_info
-			check_rtp_enabled
-			create_top_scanned_files
-			auditd_initiators
-			tidy_up_short
-			clean_house
-			package_and_compress
-			append_log_file
-		;;
-		-nt)
-			disclaimer
-			header_linux
-            check_mdatp_running
-            check_requirements
-            create_dir_struct
-			collect_info
-			network_trace
-			check_rtp_enabled
-			create_top_scanned_files
-			auditd_initiators
-			tidy_up_short
-			clean_house
-            package_and_compress
-			append_log_file
-		;;
-		
-		-ct)
-			disclaimer
-			header_linux
-            check_mdatp_running
-            check_requirements
-            create_dir_struct
-			collect_info
-			mdatp_connectivity_test
-			check_rtp_enabled
-			create_top_scanned_files
-			auditd_initiators
-			tidy_up_short
-			clean_house
-            package_and_compress
-			append_log_file
-		;;
-
 		-m)
 			calc
 		;;
@@ -1021,16 +695,11 @@ case $1 in
 		;;
 		
 		-h) 
-			echo "     ======================================= Linux CPU and Memory Tracer ==========================================="
+			echo "     ======================================= beta Xplat Performance Tool ==========================================="
 			echo "     Usage:./betaXplatPerformanceTool.sh -ps <time to capture in seconds>, performance short-mode."
 		    echo "	   ./betaXplatPerformanceTool.sh -pl <nr. of samples> <sampling interval in seconds>, performance long-mode." 
 			echo "                   Can  be used with 'nohup' and sent to background [&] in long run captures, when remote "
 			echo "                   sessions need to be disconnected."
-			echo "	   ./betaXplatPerformanceTool.sh -d, displays disclaimer"
-			echo "	   ./betaXplatPerformanceTool.sh -ti, collects top initiators for auditd syscalls and top scans for AV."
-			echo "           ./betaXplatPerformanceTool.sh -nt <capture time, in seconds>, runs network trace on ALL interfaces."
-			echo "           ./betaXplatPerformanceTool.sh -ct, runs 'mdatp connectivity test'. Can take long if there are"
-			echo "                    connectivity issues or required MDE URLs are not whitelisted."
 			echo "          ./betaXplatPerformanceTool.sh -m, calculator for time parameters for '-pl' option."
 			echo ""
 			echo "     Note on '-pl' parameters:"
