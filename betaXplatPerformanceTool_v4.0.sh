@@ -555,24 +555,31 @@ cp /tmp/betaXplatPerformanceTool_start-$DATE_START.pid /tmp/betaXplatPerformance
 }
 
 disclaimer () {
-echo "********************************** DISCLAIMER ***************************************************"
-echo "This sample script is not supported under any Microsoft standard support program or service."
-echo "The sample script is provided “AS IS” without warranty of any kind. Microsoft further disclaims"
-echo "all implied warranties including, without limitation, any implied warranties of merchantability" 
-echo "or of fitness for a particular purpose. The entire risk arising out of the use or performance of"
-echo "the sample scripts and documentation remains with you. In no event shall Microsoft, its authors,"
-echo "or anyone else involved in the creation, production, or delivery of the scripts be liable for any" 
-echo "damages whatsoever (including, without limitation, damages for loss of business profits, business"
-echo "interruption, loss of business information, or other pecuniary loss) arising out of the use of or" 
-echo "inability to use the sample scripts or documentation, even if Microsoft has been advised of the "
-echo "possibility of such damages."
-echo "*************************************************************************************************"
-echo "Do you agree with running the script after reading the above disclaimer? [y]Yes; [n]No"
 
-read consent
-if  [ ! $consent == "y" ]; 
-then
-	exit 0;
+if ! [ -f .consent.txt ]
+then 
+
+	echo "********************************** DISCLAIMER ***************************************************"
+	echo "This sample script is not supported under any Microsoft standard support program or service."
+	echo "The sample script is provided “AS IS” without warranty of any kind. Microsoft further disclaims"
+	echo "all implied warranties including, without limitation, any implied warranties of merchantability" 
+	echo "or of fitness for a particular purpose. The entire risk arising out of the use or performance of"
+	echo "the sample scripts and documentation remains with you. In no event shall Microsoft, its authors,"
+	echo "or anyone else involved in the creation, production, or delivery of the scripts be liable for any" 
+	echo "damages whatsoever (including, without limitation, damages for loss of business profits, business"
+	echo "interruption, loss of business information, or other pecuniary loss) arising out of the use of or" 
+	echo "inability to use the sample scripts or documentation, even if Microsoft has been advised of the "
+	echo "possibility of such damages."
+	echo "*************************************************************************************************"
+	echo "Do you agree with running the script after reading the above disclaimer? [y]Yes [n]No"
+
+	read consent
+	if  [ ! $consent == "y" ]
+	then
+		exit 0
+	fi
+	
+	touch .consent.txt
 fi
 }
 
