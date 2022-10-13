@@ -612,6 +612,12 @@ calc () {
     done
 }
 
+header_linux () {
+echo " ---------------- $(date) -----------------"
+echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) -----------"
+}
+
+
 #############################################################
 #                   END Define Functions				    #
 #############################################################
@@ -625,6 +631,7 @@ case $1 in
 			check_mdatp_running
 			check_requirements
 			create_dir_struct
+			get_cpuinfo
 			echo_loop
 			loop > $DIRNAME/$MAIN_LOGFILENAME | count
 			feed_data
@@ -647,6 +654,7 @@ case $1 in
 			check_mdatp_running
 			check_requirements
 			create_dir_struct
+			get_cpuinfo
 			echo_loop_long
 			loop_long > $DIRNAME/$MAIN_LOGFILENAME
 			feed_data
