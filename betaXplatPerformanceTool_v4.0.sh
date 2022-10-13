@@ -567,9 +567,10 @@ echo "interruption, loss of business information, or other pecuniary loss) arisi
 echo "inability to use the sample scripts or documentation, even if Microsoft has been advised of the "
 echo "possibility of such damages."
 echo "*************************************************************************************************"
-echo "Do you agree with running the scirpt after reading the above disclaimer? [y]Yes; [n]No"
-read consentment
-if  [ ! $consentment == "y" ]; 
+echo "Do you agree with running the script after reading the above disclaimer? [y]Yes; [n]No"
+
+read consent
+if  [ ! $consent == "y" ]; 
 then
 	exit 0;
 fi
