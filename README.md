@@ -34,6 +34,8 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
   - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 - Unzip download.zip
   - unzip download.zip
+- Change directory into sccript path
+  - cd linux-tracer-download
 - Adjust permissions:
   - chmod +x betaXplatPerformanceTool.sh
 - Read 'help' dialog:
