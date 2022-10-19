@@ -44,7 +44,7 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 - Run 'beta Xplat Performance Tool' based on your needs (below example runs for 5 minutes, 300 seconds):
   - ./betaXplatPerformanceTool.sh -ps 300
 - Confirm investigation package is created and share it with us:
-  - You should find a package named betaXplatPerformanceTool-<date>.zip
+  - You should find a package named betaXplatPerformanceTool-< date >.zip
 
 ## Tested and known to have produced the expected results in the following systems:
 - RHEL 8.2 (Ootpa) 
