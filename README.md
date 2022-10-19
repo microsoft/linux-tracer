@@ -31,6 +31,9 @@ It’s a command-line tool, shellscript, that receives an interval of time as pa
 ### From the Linux server to collect logs from, do as follows:
 - Get script:
   - wget https://aka.ms/betaxplatperformancetool -O betaXplatPerformanceTool.sh
+  - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
+-Unzip download.zip
+  - unzip download.zip
 - Adjust permissions:
   - chmod +x betaXplatPerformanceTool.sh
 - Read 'help' dialog:
