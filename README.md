@@ -31,13 +31,13 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 - unzip download.zip
 ### Change directory into script path
 - cd linux-tracer-download
-## Adjust permissions:
+### Adjust permissions:
 - chmod +x betaXplatPerformanceTool.sh
-## Read 'help' dialog:
+### Read 'help' dialog:
 - ./betaXplatPerformanceTool.sh -h
-## Run script as needed: below example runs for 5 minutes, 300 seconds
+### Run script as needed: below example runs for 5 minutes, 300 seconds
 - ./betaXplatPerformanceTool.sh -ps 300
-## Confirm investigation package is created
+### Confirm investigation package is created
 - You should find a package named betaXplatPerformanceTool-<--date-->.zip
 
 # Known to work in the following systems:
