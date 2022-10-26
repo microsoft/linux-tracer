@@ -24,9 +24,8 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 ![194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263](https://user-images.githubusercontent.com/113130572/198121656-92c6ae3c-4667-429c-81e5-6834f63d4e89.png)
 
 # Usage:
-### From the Linux server, get script:
+### From the Linux server, get script using one of the below:
 - wget https://aka.ms/betaxplatperformancetool -O betaXplatPerformanceTool.sh && chmod +x betaXplatPerformanceTool.sh
-or
 - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 ### Unzip download.zip
 - unzip download.zip
