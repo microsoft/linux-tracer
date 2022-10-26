@@ -192,7 +192,7 @@ if [ $? != 0 ]
 		echo -e " *** Please confirm 'mdatp' is installed on your system."
 		exit 0
 	else
-		echo -e " *** Found 'mdatp'."
+		echo -e " *** 'mdatp' is installed."
 fi
 
 echo -e " *** Checking if 'mdatp' service is running..."
@@ -202,26 +202,47 @@ systemctl list-units --type=service \
 
 if [ $? != 0 ]
 	then
-		echo -e " *** 'mdatp' service is not running on your system."
+		echo -e " *** 'mdatp' service is not running."
 		echo -e " *** Please start 'mdatp' service."
 		exit 0
 	else
 		echo -e " *** 'mdatp' service is running."
 fi
 
-echo -e " *** Checking if 'auditd' service is running..."
+echo -e " *** Checking if 'auditd' is running..."
 
 systemctl list-units --type=service \
                      --state=running | grep auditd.service | grep "loaded active running" > /dev/null 2>&1
 
 if [ $? != 0 ]
 	then
-		echo -e " *** 'auditd' service is not running on your system."
-		echo -e " *** Please start 'auditd' service."
+		echo -e " *** 'auditd' is not running on your system."
+		echo -e " *** Please start 'auditd'."
 		exit 0
 	else
 		echo -e " *** 'auditd' service is running."
 fi
+}
+
+get_rtp_stats () {
+echo " *** Creating statistics..."
+sudo mdatp config real-time-protection-statistics --value enabled > /dev/null 2>&1
+mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
+
+totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
+sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nru))
+
+for ((c=0; c<=4; c++))
+do       
+	if ((! ${sortedFiles[$c]} == 0))
+	then
+		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | head -1 | awk -F ':' '{print $1}') # Get number of line
+		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
+
+	else
+		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
+	fi
+done
 }
 
 loop() {
@@ -654,6 +675,7 @@ case $1 in
 			create_plotting_files
 			create_plot_graph
 			generate_report
+			get_rtp_stats
 			tidy_up
 			clean_house
 			package_and_compress
