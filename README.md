@@ -26,7 +26,7 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 # Usage:
 ### From the Linux server, get script:
 - wget https://aka.ms/betaxplatperformancetool -O betaXplatPerformanceTool.sh && chmod +x betaXplatPerformanceTool.sh
-### Read 'help' dialog:
+### Read 'help' dialog for instructions:
 - ./betaXplatPerformanceTool.sh -h
 ### Run script as needed. Below example runs for 5 minutes, 300 seconds:
 - ./betaXplatPerformanceTool.sh -ps 300
