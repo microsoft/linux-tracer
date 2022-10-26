@@ -231,7 +231,7 @@ echo ${sortedFiles[*]}
 
 for ((c=0; c<=4;c++))
 do       
-	if((! ${sortedFiles[$c]} == 0))
+	if ((! ${sortedFiles[$c]} == 0))
 	then
 		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
 		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
