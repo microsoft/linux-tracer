@@ -24,18 +24,18 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 ![194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263](https://user-images.githubusercontent.com/113130572/198121656-92c6ae3c-4667-429c-81e5-6834f63d4e89.png)
 
 # Usage:
-## From the Linux server get script:
+### From the Linux server get script:
 - wget https://aka.ms/betaxplatperformancetool -O betaXplatPerformanceTool.sh
 - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
-## Unzip download.zip
+### Unzip download.zip
 - unzip download.zip
-## Change directory into script path
+### Change directory into script path
 - cd linux-tracer-download
 ## Adjust permissions:
 - chmod +x betaXplatPerformanceTool.sh
 ## Read 'help' dialog:
 - ./betaXplatPerformanceTool.sh -h
-## Run 'beta Xplat Performance Tool' based on your needs (below example runs for 5 minutes, 300 seconds):
+## Run script as needed: below example runs for 5 minutes, 300 seconds
 - ./betaXplatPerformanceTool.sh -ps 300
 ## Confirm investigation package is created
 - You should find a package named betaXplatPerformanceTool-<--date-->.zip
