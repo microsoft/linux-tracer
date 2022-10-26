@@ -195,7 +195,7 @@ if [ $? != 0 ]
 		echo -e " *** Found 'mdatp'. [OK]"
 fi
 
-echo -e " *** Checking if 'mdatp' service is running... "
+echo -e " *** Checking if 'mdatp' service is running..."
 
 systemctl list-units --type=service \
                      --state=running | grep mdatp.service | grep "loaded active running" > /dev/null 2>&1
@@ -209,7 +209,7 @@ if [ $? != 0 ]
 		echo -e " *** 'mdatp' service is running."
 fi
 
-echo -e " *** Checking if 'auditd' service is running... "
+echo -e " *** Checking if 'auditd' service is running..."
 
 systemctl list-units --type=service \
                      --state=running | grep auditd.service | grep "loaded active running" > /dev/null 2>&1
