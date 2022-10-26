@@ -208,6 +208,19 @@ if [ $? != 0 ]
 	else
 		echo -e " *** 'mdatp' service is running."
 fi
+
+systemctl list-units --type=service \
+                     --state=running | grep auditd.service | grep "loaded active running" > /dev/null 2>&1
+
+if [ $? != 0 ]
+	then
+		echo -e " *** 'auditd' service is not running on your system."
+		echo -e " *** Please start 'auditd' service."
+		exit 0
+	else
+		echo -e " *** 'auditd' service is running."
+fi
+
 }
 
 loop() {
