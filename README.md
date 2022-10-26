@@ -29,7 +29,7 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 - wget https://github.com/microsoft/linux-tracer/archive/refs/heads/download.zip
 ## Unzip download.zip
 - unzip download.zip
-## Change directory into sccript path
+## Change directory into script path
 - cd linux-tracer-download
 ## Adjust permissions:
 - chmod +x betaXplatPerformanceTool.sh
@@ -40,7 +40,7 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 ## Confirm investigation package is created
 - You should find a package named betaXplatPerformanceTool-<--date-->.zip
 
-# Tested and known to have produced the expected results in the following systems:
+# Known to work in the following systems:
 - RHEL 8.2 (Ootpa)
 - Ubuntu 20.04.4 LTS (Focal Fossa)
 - CentOS 7.9
