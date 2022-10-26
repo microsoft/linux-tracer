@@ -225,20 +225,24 @@ fi
 }
 
 get_rtp_stats () {
+echo " *** Creating statistics..."
+sudo mdatp config real-time-protection-statistics --value enabled > /dev/null 2>&1
+mdatp diagnostic real-time-protection-statistics > $DIRNAME/rtp_stats_tmp1.log # Gather mdatp statistics
+
 totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
 sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nru))
-echo ${sortedFiles[*]}
 
-for ((c=0; c<=4;c++))
+for ((c=0; c<=4; c++))
 do       
 	if ((! ${sortedFiles[$c]} == 0))
 	then
-		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
+		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | head -1 | awk -F ':' '{print $1}') # Get number of line
 		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
 
 	else
 		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
 	fi
+done
 }
 
 loop() {
