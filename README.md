@@ -37,14 +37,15 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 - ./betaXplatPerformanceTool.sh -h
 ## Run 'beta Xplat Performance Tool' based on your needs (below example runs for 5 minutes, 300 seconds):
 - ./betaXplatPerformanceTool.sh -ps 300
-## Confirm investigation package is created and share it with us
+## Confirm investigation package is created
 - You should find a package named betaXplatPerformanceTool-<--date-->.zip
-Tested and known to have produced the expected results in the following systems:
-RHEL 8.2 (Ootpa)
-Ubuntu 20.04.4 LTS (Focal Fossa)
-CentOS 7.9
-Debian 11.5
-Oracle Enterprise Linux 7.9
-Oracle Enterprise Linux 8.6
-RHEL 7.8
-RHEL 8
+
+# Tested and known to have produced the expected results in the following systems:
+- RHEL 8.2 (Ootpa)
+- Ubuntu 20.04.4 LTS (Focal Fossa)
+- CentOS 7.9
+- Debian 11.5
+- Oracle Enterprise Linux 7.9
+- Oracle Enterprise Linux 8.6
+- RHEL 7.8
+- RHEL 8
