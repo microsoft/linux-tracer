@@ -29,7 +29,7 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 ### Read 'help' dialog for instructions:
 - ./betaXplatPerformanceTool.sh -h
 ### Run script as needed. Below example runs for 5 minutes, 300 seconds:
-- ./betaXplatPerformanceTool.sh -ps 300
+-- ./betaXplatPerformanceTool.sh -ps 300
 ### Confirm investigation package is created:
 - You should find a package named betaXplatPerformanceTool-<--date-->.zip
 
