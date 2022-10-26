@@ -15,3 +15,10 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 - Basic Shell Script using 'awk', 'sed', 'grep', 'tee' base install available Linux tools
 - Easily adaptable and scalable code
 - Simply execute the script and collect resulting package for investigation
+
+# Examples of performance graphs for RAM and CPU
+
+![194161484-c04fece5-ac7a-440f-b1f4-b221bdd6a344](https://user-images.githubusercontent.com/113130572/198121620-8c1ed95d-b36e-4686-9dd8-5a5c8f127fd5.png)
+![194161566-7e2be150-c480-485f-9eef-eee6941277b9](https://user-images.githubusercontent.com/113130572/198121631-efa6f791-ebe0-4cf1-8bc1-10e69d6639ea.png)
+![194161596-32769f74-9035-4a47-9f71-4d5c160de1a5](https://user-images.githubusercontent.com/113130572/198121645-ca0e0ccf-96ef-4055-874f-64351839cb2c.png)
+![194161620-09b648ce-4eb1-4e3b-bb7c-6586fdc95263](https://user-images.githubusercontent.com/113130572/198121656-92c6ae3c-4667-429c-81e5-6834f63d4e89.png)
