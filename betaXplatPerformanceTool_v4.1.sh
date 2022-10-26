@@ -224,6 +224,23 @@ if [ $? != 0 ]
 fi
 }
 
+get_rtp_stats () {
+totalFiles=$(cat $DIRNAME/rtp_stats_tmp1.log | grep -e "Total" | awk '{print $4}') # Get Array with total files;
+sortedFiles=($(printf '%s\n' "${totalFiles[@]}" | sort -nru))
+echo ${sortedFiles[*]}
+
+for ((c=0; c<=4;c++))
+do       
+	if((! ${sortedFiles[$c]} == 0))
+	then
+		nl=$(grep -n -w "Total files scanned: ${sortedFiles[$c]}" $DIRNAME/rtp_stats_tmp1.log | awk -F ':' '{print $1}') # Get number of line
+		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
+
+	else
+		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
+	fi
+}
+
 loop() {
 for (( i = 1; i <= $LIMIT; i++ ))
 do
@@ -654,6 +671,7 @@ case $1 in
 			create_plotting_files
 			create_plot_graph
 			generate_report
+			get_rtp_stats
 			tidy_up
 			clean_house
 			package_and_compress
