@@ -18,7 +18,7 @@ FLOAT='^[0-9]*(\.[0-9]+)?$'
 # Define number of seconds to capture 
 LIMIT=$2
 
-# Define number of MDATP processes we're checking
+# Define number of MDATP processes to check
 NR_OF_PIDS=4
 
 # Define main log file name
