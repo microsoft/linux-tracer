@@ -18,7 +18,7 @@ FLOAT='^[0-9]*(\.[0-9]+)?$'
 # Define number of seconds to capture 
 LIMIT=$2
 
-# Define number of MDATP processes we're checking
+# Define number of MDATP processes to check
 NR_OF_PIDS=4
 
 # Define main log file name
@@ -183,7 +183,7 @@ fi
 }
 
 check_mdatp_running () {
-echo -e " *** Checking if MDATP is installed..."
+echo -e " *** Checking if 'mdatp' is installed..."
 which mdatp > /dev/null 2>&1
 
 if [ $? != 0 ]
@@ -192,10 +192,10 @@ if [ $? != 0 ]
 		echo -e " *** Please confirm 'mdatp' is installed on your system."
 		exit 0
 	else
-		echo -e " *** Found 'mdatp'. [OK]"
+		echo -e " *** Found 'mdatp'."
 fi
 
-echo -e " *** Checking if MDATP service is running... "
+echo -e " *** Checking if 'mdatp' service is running..."
 
 systemctl list-units --type=service \
                      --state=running | grep mdatp.service | grep "loaded active running" > /dev/null 2>&1
@@ -209,6 +209,8 @@ if [ $? != 0 ]
 		echo -e " *** 'mdatp' service is running."
 fi
 
+echo -e " *** Checking if 'auditd' service is running..."
+
 systemctl list-units --type=service \
                      --state=running | grep auditd.service | grep "loaded active running" > /dev/null 2>&1
 
@@ -220,7 +222,6 @@ if [ $? != 0 ]
 	else
 		echo -e " *** 'auditd' service is running."
 fi
-
 }
 
 loop() {
