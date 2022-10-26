@@ -209,6 +209,7 @@ if [ $? != 0 ]
 		echo -e " *** 'mdatp' service is running."
 fi
 
+<<<<<<< HEAD:betaXplatPerformanceTool_v4.1.sh
 systemctl list-units --type=service \
                      --state=running | grep auditd.service | grep "loaded active running" > /dev/null 2>&1
 
@@ -223,6 +224,8 @@ fi
 
 }
 
+=======
+>>>>>>> c2c0226784102ac554dcf73d741bc6144310dfa4:betaXplatPerformanceTool_v4.1.sh
 loop() {
 for (( i = 1; i <= $LIMIT; i++ ))
 do
@@ -506,6 +509,7 @@ then
 	
 	touch .consent.txt
 fi
+<<<<<<< HEAD:betaXplatPerformanceTool_v4.1.sh
 }
 
 calc () {
@@ -630,6 +634,132 @@ echo " ---------------- $(date) -----------------"
 echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) -----------"
 }
 
+=======
+}
+
+calc () {
+
+    hour_minute () {
+        read -p  " *** How long do you want to capture for? (hours): " CAPTURE_PERIOD
+
+		if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+        echo "   > Capture period will be $CAPTURE_PERIOD hours."
+
+        read -p  " *** What will be your capture interval? (minutes): " CAPTURE_INTERVAL
+
+		if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+        echo "   > Capture interval will be $CAPTURE_INTERVAL minutes."
+
+        PARAM1_UP=$(echo "scale=0; ${CAPTURE_PERIOD}*3600" | bc -l)
+        #echo $PARAM1_UP
+        PARAM1_DWN=$(echo "scale=0; ${CAPTURE_INTERVAL}*60" | bc -l)
+        #echo $PARAM1_DWN
+        PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
+        #echo $PARAM1
+
+        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL minutes interval, this is your command: './betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+    }
+
+    minute_second () {
+
+        read -p  " *** How long do you want to capture for? (minutes): " CAPTURE_PERIOD
+        
+
+        if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+		echo "   > Capture period will be $CAPTURE_PERIOD minutes."
+
+        read -p  " *** What will be your capture interval? (seconds): " CAPTURE_INTERVAL
+        
+        if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]*(\.[0-9]+)?$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+		echo "   > Capture interval will be $CAPTURE_INTERVAL seconds."
+
+        PARAM1_UP=$(echo "scale=1; ${CAPTURE_PERIOD}*60" | bc -l)
+        PARAM1_DWN=${CAPTURE_INTERVAL}
+        PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
+
+        echo " *** For a $CAPTURE_PERIOD minutes capture in $CAPTURE_INTERVAL seconds interval, this is your command: './betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+    }
+
+    hour_second () {
+
+        read -p  " *** How long do you want to capture for? (hours): " CAPTURE_PERIOD
+        
+        if ! [[ $CAPTURE_PERIOD =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+		echo "   > Capture period will be $CAPTURE_PERIOD hours."
+
+        read -p  " *** What will be your capture interval? (seconds): " CAPTURE_INTERVAL
+        echo "   > Capture interval will be $CAPTURE_INTERVAL seconds."
+
+        if ! [[ $CAPTURE_INTERVAL =~ ^[0-9]+$ ]]
+        then    
+            echo " *** Invalid parameter. Re-run script and try again."
+            exit 0
+        fi
+
+        PARAM1_UP=$(echo "scale=1; ${CAPTURE_PERIOD}*3600" | bc -l)
+        PARAM1_DWN=${CAPTURE_INTERVAL}
+        PARAM1=$(echo "scale=0; $PARAM1_UP/$PARAM1_DWN" | bc -l)
+
+        echo " *** For a $CAPTURE_PERIOD hours capture in $CAPTURE_INTERVAL seconds interval, this is your command: './betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN'"
+        echo " *** Use 'nohup ./betaXplatPerformanceTool.sh -pl $PARAM1 $PARAM1_DWN &' to be able to disconnect your remote session and keep capture going"
+    }
+
+    echo " *** Pick 1, 2 or 3, according to time format to use:"
+    select option in hour-minute minute-second hour-second
+    do 
+
+        if [ $option = hour-minute ]
+        then
+            hour_minute
+        fi
+        
+
+        if [ $option = minute-second ]
+        then
+            minute_second
+        fi
+        
+        if [ $option = hour-second ]
+        then
+            hour_second
+        fi
+        exit
+    done
+}
+
+header_linux () {
+echo " ---------------- $(date) -----------------"
+echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) -----------"
+}
+
+>>>>>>> c2c0226784102ac554dcf73d741bc6144310dfa4:betaXplatPerformanceTool_v4.1.sh
 
 #############################################################
 #                   END Define Functions				    #
