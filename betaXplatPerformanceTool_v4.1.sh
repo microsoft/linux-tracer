@@ -192,7 +192,7 @@ if [ $? != 0 ]
 		echo -e " *** Please confirm 'mdatp' is installed on your system."
 		exit 0
 	else
-		echo -e " *** Found 'mdatp'."
+		echo -e " *** 'mdatp' is installed."
 fi
 
 echo -e " *** Checking if 'mdatp' service is running..."
@@ -202,22 +202,22 @@ systemctl list-units --type=service \
 
 if [ $? != 0 ]
 	then
-		echo -e " *** 'mdatp' service is not running on your system."
+		echo -e " *** 'mdatp' service is not running."
 		echo -e " *** Please start 'mdatp' service."
 		exit 0
 	else
 		echo -e " *** 'mdatp' service is running."
 fi
 
-echo -e " *** Checking if 'auditd' service is running..."
+echo -e " *** Checking if 'auditd' is running..."
 
 systemctl list-units --type=service \
                      --state=running | grep auditd.service | grep "loaded active running" > /dev/null 2>&1
 
 if [ $? != 0 ]
 	then
-		echo -e " *** 'auditd' service is not running on your system."
-		echo -e " *** Please start 'auditd' service."
+		echo -e " *** 'auditd' is not running on your system."
+		echo -e " *** Please start 'auditd'."
 		exit 0
 	else
 		echo -e " *** 'auditd' service is running."
