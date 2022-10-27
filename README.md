@@ -1,6 +1,6 @@
 # beta Xplat Performance Tool
-Last version is v4.1
-sha256sum af33f477c5a9efcb8cbc712b86abc3d79540a16f547e5b42f122bed88299cf64
+  Last version is v4.1
+  sha256sum af33f477c5a9efcb8cbc712b86abc3d79540a16f547e5b42f122bed88299cf64
 
 # Context:
 The 'beta Xplat Performance Tool' is intended for Linux performance data collection, CPU and Memory load investigation and analysis, when high CPU or Memory load is reported. It aims at quickly being able to determine a device’s CPU and Memory load and ellaborate on mitigation, as well as propose fixes. It's very intuitive and easy to use, returns results that are easy to interpret and relies on very basic set of tools existent in virtually all Linux minimal installations.
