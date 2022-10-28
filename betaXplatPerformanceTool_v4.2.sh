@@ -6,7 +6,7 @@ echo "$0 $@" > betaXplatPerformanceTool.log
 #                   START Define vars     				    #
 #############################################################
 
-SCRIPT_VERSION=4.1
+SCRIPT_VERSION=4.2
 
 HITS=$2
 WAIT=$3
@@ -321,16 +321,33 @@ mv $DIRNAME/pid3.mem.plt $DIRNAME/3"_"$PID3_NAME.mem.plt
 mv $DIRNAME/pid4.mem.plt $DIRNAME/4"_"$PID4_NAME.mem.plt
 
 }
+
 create_plot_graph () {
-# Create plot.cpu.plt script
+
+# Declare function vars
 #
 NR_CPU=$(cat ${DIRNAME}/cpuinfo.txt | wc -l)
+PLOT_DATE=$(date)
+HOSTNAME=$(hostnamectl | grep "Static hostname" | awk -F ':' '{ print $2 }')
+OS=$(hostnamectl | grep "Operating System" | awk -F ':' '{ print $2 }')
+RTP_TEST=$(mdatp health | grep "real_time_protection_enabled" | awk -F ':' '{ print $2 }')
+PASSV_M_TEST=$(mdatp health | grep passive_mode | awk -F ':' '{ print $2 }')
+BM_TEST=$(sudo cat /etc/opt/microsoft/mdatp/wdavcfg | awk -F ':' '{ print $64 }' | awk -F ',' '{ print $1 }' | sed -e 's/^.//' -e 's/.$//')
+
+# Create plot.cpu.plt script
+#
 echo "set terminal wxt size 1800,600"  >> $DIRNAME/cpu_plot.plt 
-echo "set title 'CPU Load for MDATP Processes (Max. CPU% = $NR_CPU"00%")'"  >> $DIRNAME/cpu_plot.plt
+echo "set title 'CPU Load for MDATP Processes (Max. CPU% = $NR_CPU"00%")   -   $PLOT_DATE'"  >> $DIRNAME/cpu_plot.plt
 echo "set xlabel 'seconds'" >> $DIRNAME/cpu_plot.plt
 echo "set ylabel 'CPU %'" >> $DIRNAME/cpu_plot.plt
 echo "set key noenhanced" >> $DIRNAME/cpu_plot.plt
 echo "set key right top outside" >> $DIRNAME/cpu_plot.plt
+echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/cpu_plot.plt
+echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/cpu_plot.plt
+echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/cpu_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.cpu.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.cpu.plt' with linespoints title '$PID2_NAME','graphs/3_$PID3_NAME.cpu.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.cpu.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/cpu_plot.plt
 
 # Create plot.mem.plt script
@@ -341,22 +358,44 @@ echo "set xlabel 'seconds'" >> $DIRNAME/mem_plot.plt
 echo "set ylabel 'Memory %'" >> $DIRNAME/mem_plot.plt
 echo "set key noenhanced" >> $DIRNAME/mem_plot.plt
 echo "set key right top outside" >> $DIRNAME/mem_plot.plt
+echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/mem_plot.plt
+echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/mem_plot.plt
+echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/mem_plot.plt
+echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/mem_plot.plt
+echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/mem_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/mem_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.mem.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.mem.plt' with linespoints title '$PID2_NAME', 'graphs/3_$PID3_NAME.mem.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.mem.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/mem_plot.plt
 }
 
 create_plot_graph_long () {
-# Create plot.cpu.plt script
+
+# Declare function vars
 #
 NR_CPU=$(cat ${DIRNAME}/cpuinfo.txt | wc -l)
+PLOT_DATE=$(date)
+HOSTNAME=$(hostnamectl | grep "Static hostname" | awk -F ':' '{ print $2 }')
+OS=$(hostnamectl | grep "Operating System" | awk -F ':' '{ print $2 }')
+RTP_TEST=$(mdatp health | grep "real_time_protection_enabled" | awk -F ':' '{ print $2 }')
+PASSV_M_TEST=$(mdatp health | grep passive_mode | awk -F ':' '{ print $2 }')
+BM_TEST=$(sudo cat /etc/opt/microsoft/mdatp/wdavcfg | awk -F ':' '{ print $64 }' | awk -F ',' '{ print $1 }' | sed -e 's/^.//' -e 's/.$//')
+
+# Create mem.cpu.plt script for long running flag
+#
 echo "set terminal wxt size 1800,600"  >> $DIRNAME/cpu_plot.plt 
 echo "set title 'CPU Load for MDATP Processes (Max. CPU% = $NR_CPU"00%")'"  >> $DIRNAME/cpu_plot.plt
 echo "set xlabel 'Samples in $WAIT second intervals'" >> $DIRNAME/cpu_plot.plt
 echo "set ylabel 'CPU %'" >> $DIRNAME/cpu_plot.plt
 echo "set key noenhanced" >> $DIRNAME/cpu_plot.plt
 echo "set key right top outside" >> $DIRNAME/cpu_plot.plt
+echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/cpu_plot.plt
+echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/cpu_plot.plt
+echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/cpu_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.cpu.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.cpu.plt' with linespoints title '$PID2_NAME', 'graphs/3_$PID3_NAME.cpu.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.cpu.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/cpu_plot.plt
 
-# Create plot.mem.plt script
+# Create plot.mem.plt script for long running flag
 #
 echo "set terminal wxt size 1800,600"  >> $DIRNAME/mem_plot.plt
 echo "set title 'Memory Load for MDATP Processes'"  >> $DIRNAME/mem_plot.plt
@@ -364,6 +403,12 @@ echo "set xlabel 'Samples in $WAIT second intervals'" >> $DIRNAME/mem_plot.plt
 echo "set ylabel 'Memory %'" >> $DIRNAME/mem_plot.plt
 echo "set key noenhanced" >> $DIRNAME/mem_plot.plt
 echo "set key right top outside" >> $DIRNAME/mem_plot.plt
+echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/mem_plot.plt
+echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/mem_plot.plt
+echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/mem_plot.plt
+echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/mem_plot.plt
+echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/mem_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/mem_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.mem.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.mem.plt' with linespoints title '$PID2_NAME', 'graphs/3_$PID3_NAME.mem.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.mem.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/mem_plot.plt
 }
 
