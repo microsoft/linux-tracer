@@ -322,15 +322,28 @@ mv $DIRNAME/pid4.mem.plt $DIRNAME/4"_"$PID4_NAME.mem.plt
 
 }
 create_plot_graph () {
+
+NR_CPU=$(cat ${DIRNAME}/cpuinfo.txt | wc -l)
+PLOT_DATE=$(date)
+HOSTNAME=$(hostnamectl | grep "Static hostname" | awk -F ':' '{ print $2 }')
+OS=$(hostnamectl | grep "Operating System" | awk -F ':' '{ print $2 }')
+RTP_TEST=$(mdatp health | grep "real_time_protection_enabled" | awk -F ':' '{ print $2 }')
+PASSV_M_TEST=$(mdatp health | grep passive_mode | awk -F ':' '{ print $2 }')
+BM_TEST=$(cat /etc/opt/microsoft/mdatp/wdavcfg | awk -F ':' '{ print $64 }' | awk -F ',' '{ print $1 }' | sed -e 's/^.//' -e 's/.$//')
+
 # Create plot.cpu.plt script
 #
-NR_CPU=$(cat ${DIRNAME}/cpuinfo.txt | wc -l)
 echo "set terminal wxt size 1800,600"  >> $DIRNAME/cpu_plot.plt 
-echo "set title 'CPU Load for MDATP Processes (Max. CPU% = $NR_CPU"00%")'"  >> $DIRNAME/cpu_plot.plt
+echo "set title 'CPU Load for MDATP Processes (Max. CPU% = $NR_CPU"00%")   -   $PLOT_DATE'"  >> $DIRNAME/cpu_plot.plt
 echo "set xlabel 'seconds'" >> $DIRNAME/cpu_plot.plt
 echo "set ylabel 'CPU %'" >> $DIRNAME/cpu_plot.plt
 echo "set key noenhanced" >> $DIRNAME/cpu_plot.plt
 echo "set key right top outside" >> $DIRNAME/cpu_plot.plt
+set label "               System information:" at graph 1, graph 0.7 >> $DIRNAME/cpu_plot.plt
+set label "    OS: $OS" at graph 1, graph 0.65 >> $DIRNAME/cpu_plot.plt
+set label "    Real Time Protection: $RTP_TEST" at graph 1, graph 0.60 >> $DIRNAME/cpu_plot.plt
+set label "    Passive Mode: $PASSV_M_TEST" at graph 1, graph 0.55 >> $DIRNAME/cpu_plot.plt
+set label "    Behavior Monitoring: $BM_TEST" at graph 1, graph 0.50 >> $DIRNAME/cpu_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.cpu.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.cpu.plt' with linespoints title '$PID2_NAME','graphs/3_$PID3_NAME.cpu.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.cpu.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/cpu_plot.plt
 
 # Create plot.mem.plt script
