@@ -324,6 +324,8 @@ mv $DIRNAME/pid4.mem.plt $DIRNAME/4"_"$PID4_NAME.mem.plt
 
 create_plot_graph () {
 
+# Declare function vars
+#
 NR_CPU=$(cat ${DIRNAME}/cpuinfo.txt | wc -l)
 PLOT_DATE=$(date)
 HOSTNAME=$(hostnamectl | grep "Static hostname" | awk -F ':' '{ print $2 }')
@@ -340,7 +342,7 @@ echo "set xlabel 'seconds'" >> $DIRNAME/cpu_plot.plt
 echo "set ylabel 'CPU %'" >> $DIRNAME/cpu_plot.plt
 echo "set key noenhanced" >> $DIRNAME/cpu_plot.plt
 echo "set key right top outside" >> $DIRNAME/cpu_plot.plt
-echo "set label '               System information:' at graph 1, graph 0.7" >> $DIRNAME/cpu_plot.plt
+echo "set label '              --- System information ---' at graph 1, graph 0.72" >> $DIRNAME/cpu_plot.plt
 echo "set label '    OS: $OS' at graph 1, graph 0.65" >> $DIRNAME/cpu_plot.plt
 echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.60" >> $DIRNAME/cpu_plot.plt
 echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.55" >> $DIRNAME/cpu_plot.plt
@@ -355,6 +357,11 @@ echo "set xlabel 'seconds'" >> $DIRNAME/mem_plot.plt
 echo "set ylabel 'Memory %'" >> $DIRNAME/mem_plot.plt
 echo "set key noenhanced" >> $DIRNAME/mem_plot.plt
 echo "set key right top outside" >> $DIRNAME/mem_plot.plt
+echo "set label '              --- System information ---' at graph 1, graph 0.72" >> $DIRNAME/mem_plot.plt
+echo "set label '    OS: $OS' at graph 1, graph 0.65" >> $DIRNAME/mem_plot.plt
+echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.60" >> $DIRNAME/mem_plot.plt
+echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.55" >> $DIRNAME/mem_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.50" >> $DIRNAME/mem_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.mem.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.mem.plt' with linespoints title '$PID2_NAME', 'graphs/3_$PID3_NAME.mem.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.mem.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/mem_plot.plt
 }
 
