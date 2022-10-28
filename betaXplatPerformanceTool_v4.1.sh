@@ -321,6 +321,7 @@ mv $DIRNAME/pid3.mem.plt $DIRNAME/3"_"$PID3_NAME.mem.plt
 mv $DIRNAME/pid4.mem.plt $DIRNAME/4"_"$PID4_NAME.mem.plt
 
 }
+
 create_plot_graph () {
 
 NR_CPU=$(cat ${DIRNAME}/cpuinfo.txt | wc -l)
@@ -329,7 +330,7 @@ HOSTNAME=$(hostnamectl | grep "Static hostname" | awk -F ':' '{ print $2 }')
 OS=$(hostnamectl | grep "Operating System" | awk -F ':' '{ print $2 }')
 RTP_TEST=$(mdatp health | grep "real_time_protection_enabled" | awk -F ':' '{ print $2 }')
 PASSV_M_TEST=$(mdatp health | grep passive_mode | awk -F ':' '{ print $2 }')
-BM_TEST=$(cat /etc/opt/microsoft/mdatp/wdavcfg | awk -F ':' '{ print $64 }' | awk -F ',' '{ print $1 }' | sed -e 's/^.//' -e 's/.$//')
+BM_TEST=$(sudo cat /etc/opt/microsoft/mdatp/wdavcfg | awk -F ':' '{ print $64 }' | awk -F ',' '{ print $1 }' | sed -e 's/^.//' -e 's/.$//')
 
 # Create plot.cpu.plt script
 #
