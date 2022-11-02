@@ -697,6 +697,29 @@ echo " ---------------- $(date) -----------------"
 echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) -----------"
 }
 
+get_CLA () {
+	echo "Pulling Client analyzer..."
+
+	wget https://aka.ms/XMDEClientAnalyzerBinary && mkdir CLA && mv XMDEClientAnalyzerBinary CLA && unzip CLA/XMDEClientAnalyzerBinary -d CLA && unzip CLA/SupportToolLinuxBinary.zip -d CLA
+
+	echo "This LogLeverl..."
+	sudo mdatp log level set --level debug
+
+	echo "Fixing permissions for ClientAnalyzer..."
+	sudo chmod +x CLA/MDESupportTool
+
+	echo "Collecting ClientAnalyzer Logs..."
+	sudo CLA/MDESupportTool -d
+
+	sleep 1
+	sudo mv /tmp/*output.zip $DIRNAME
+	echo "Logs have been collected"
+	
+	echo "Cleaning up ClientAnalyzer folders"
+	rm -rf ./CLA
+}
+
+
 
 #############################################################
 #                   END Define Functions				    #
@@ -721,6 +744,7 @@ case $1 in
 			create_plot_graph
 			generate_report
 			get_rtp_stats
+			get_CLA
 			tidy_up
 			clean_house
 			package_and_compress
@@ -744,6 +768,7 @@ case $1 in
 			create_plotting_files
 			create_plot_graph_long
 			generate_report
+			get_CLA
 			tidy_up_long
 			clean_house
 			package_and_compress
