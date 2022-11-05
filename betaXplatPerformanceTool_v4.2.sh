@@ -702,7 +702,7 @@ echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) ---------
 get_CLA () {
 	echo "Pulling Client analyzer..."
 
-	wget https://aka.ms/XMDEClientAnalyzerBinary && mkdir CLA && mv XMDEClientAnalyzerBinary CLA && unzip CLA/XMDEClientAnalyzerBinary -d CLA && unzip CLA/SupportToolLinuxBinary.zip -d CLA
+	mkdir CLA && mv XMDEClientAnalyzerBinary CLA && unzip CLA/XMDEClientAnalyzerBinary -d CLA && unzip CLA/SupportToolLinuxBinary.zip -d CLA
 
 	echo "This LogLeverl..."
 	sudo mdatp log level set --level debug
