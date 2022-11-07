@@ -720,25 +720,25 @@ run_CLiA () {
 	LOG_LEVEL=$(mdatp health | grep log_level | awk -F ':' '{ print $2  }' | tail -c +3 | head -c -2)
 
 	echo " *** Preparing 'ClientAnalyzer'..."
-	mkdir CLA && mv XMDEClientAnalyzerBinary CLA && unzip CLA/XMDEClientAnalyzerBinary -d CLA && unzip CLA/SupportToolLinuxBinary.zip -d CLA > /dev/null 2>&1
+	mkdir CLA && mv XMDEClientAnalyzerBinary CLA && unzip CLA/XMDEClientAnalyzerBinary -d CLA && unzip CLA/SupportToolLinuxBinary.zip -d CLA
 
 	echo " *** Set 'ClientAnalyzer' log level to 'debug'..."
-	sudo mdatp log level set --level debug > /dev/null 2>&1 
+	sudo mdatp log level set --level debug 
 
 	echo " *** Fixing permissions for 'ClientAnalyzer'..."
-	sudo chmod +x CLA/MDESupportTool > /dev/null 2>&1
+	sudo chmod +x CLA/MDESupportTool 
 
 	echo " *** Collecting 'ClientAnalyzer' Logs..."
-	sudo CLA/MDESupportTool -d > /dev/null 2>&1 
+	sudo CLA/MDESupportTool -d
 
-	sudo mv /tmp/*output.zip $DIRNAME > /dev/null 2>&1 
+	sudo mv /tmp/*output.zip $DIRNAME 
 	echo " *** Logs have been collected."
 	
 	echo " *** Cleaning up 'ClientAnalyzer' folders"
-	rm -rf ./CLA > /dev/null 2>&1  
+	rm -rf ./CLA 
 
 	echo " *** Revert to original log level: $LOG_LEVEL"
-	sudo mdatp log level set --level $LOG_LEVEL > /dev/null 2>&1 
+	sudo mdatp log level set --level $LOG_LEVEL 
 }
 
 #############################################################
