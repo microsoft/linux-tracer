@@ -720,7 +720,9 @@ run_CLiA () {
 	LOG_LEVEL=$(mdatp health | grep log_level | awk -F ':' '{ print $2  }' | tail -c +3 | head -c -2)
 
 	echo " *** Preparing 'ClientAnalyzer'..."
-	mkdir CLA && mv XMDEClientAnalyzerBinary CLA && unzip CLA/XMDEClientAnalyzerBinary -d CLA && unzip CLA/SupportToolLinuxBinary.zip -d CLA > /dev/null 2>&1
+	mkdir CLA && mv XMDEClientAnalyzerBinary CLA > /dev/null 2>&1
+	unzip CLA/XMDEClientAnalyzerBinary -d CLA > /dev/null 2>&1
+	unzip CLA/SupportToolLinuxBinary.zip -d CLA > /dev/null 2>&1
 
 	echo " *** Set 'ClientAnalyzer' log level to 'debug'..."
 	sudo mdatp log level set --level debug > /dev/null 2>&1 
@@ -729,7 +731,7 @@ run_CLiA () {
 	sudo chmod +x CLA/MDESupportTool > /dev/null 2>&1
 
 	echo " *** Collecting 'ClientAnalyzer' Logs..."
-	sudo CLA/MDESupportTool -d --bypass-disclaimer > /dev/null 2>&1
+	sudo CLA/MDESupportTool -d --bypass-disclaimer  > /dev/null 2>&1
 
     mkdir $DIRNAME/ClientAnalizer > /dev/null 2>&1
 	sudo mv /tmp/*output.zip $DIRNAME/ClientAnalizer > /dev/null 2>&1 
