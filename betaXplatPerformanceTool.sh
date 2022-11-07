@@ -6,7 +6,7 @@ echo "$0 $@" > betaXplatPerformanceTool.log
 #                   START Define vars     				    #
 #############################################################
 
-SCRIPT_VERSION=4.2
+SCRIPT_VERSION=4.2.0
 
 HITS=$2
 WAIT=$3
@@ -182,6 +182,16 @@ then
 fi
 }
 
+collect_info () {
+
+free -h > $DIRNAME/free.txt
+cat /proc/cpuinfo | grep processor > $DIRNAME/cpuinfo.txt
+df -h > $DIRNAME/df.txt
+pstree > $DIRNAME/pstree.txt
+ps -ef > $DIRNAME/psef.txt
+sudo dmesg > $DIRNAME/dmesg.txt
+}
+
 check_mdatp_running () {
 echo -e " *** Checking if 'mdatp' is installed..."
 which mdatp > /dev/null 2>&1
@@ -332,7 +342,8 @@ HOSTNAME=$(hostnamectl | grep "Static hostname" | awk -F ':' '{ print $2 }')
 OS=$(hostnamectl | grep "Operating System" | awk -F ':' '{ print $2 }')
 RTP_TEST=$(mdatp health | grep "real_time_protection_enabled" | awk -F ':' '{ print $2 }')
 PASSV_M_TEST=$(mdatp health | grep passive_mode | awk -F ':' '{ print $2 }')
-BM_TEST=$(sudo cat /etc/opt/microsoft/mdatp/wdavcfg | awk -F ':' '{ print $64 }' | awk -F ',' '{ print $1 }' | sed -e 's/^.//' -e 's/.$//')
+BM_TEST=$(for i in {1..80}; do sudo cat /etc/opt/microsoft/mdatp/wdavcfg | cut -d"," -f $i; done | grep features | grep behaviorMonitoring | awk -F ':' '{ print $3 }')
+APP_VERSION=$(mdatp health | grep app_version | awk -F ':' '{ print $2  }' | tail -c +3 | head -c -2)
 
 # Create plot.cpu.plt script
 #
@@ -344,10 +355,12 @@ echo "set key noenhanced" >> $DIRNAME/cpu_plot.plt
 echo "set key right top outside" >> $DIRNAME/cpu_plot.plt
 echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/cpu_plot.plt
 echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/cpu_plot.plt
-echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/cpu_plot.plt
-echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/cpu_plot.plt
-echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/cpu_plot.plt
-echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Hostname: $HOSTNAME' at graph 1, graph 0.63" >> $DIRNAME/cpu_plot.plt
+echo "set label '    OS: $OS' at graph 1, graph 0.58" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.53" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.48" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.43" >> $DIRNAME/cpu_plot.plt
+echo "set label '    App. Version: $APP_VERSION' at graph 1, graph 0.38" >> $DIRNAME/cpu_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.cpu.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.cpu.plt' with linespoints title '$PID2_NAME','graphs/3_$PID3_NAME.cpu.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.cpu.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/cpu_plot.plt
 
 # Create plot.mem.plt script
@@ -360,10 +373,12 @@ echo "set key noenhanced" >> $DIRNAME/mem_plot.plt
 echo "set key right top outside" >> $DIRNAME/mem_plot.plt
 echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/mem_plot.plt
 echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/mem_plot.plt
-echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/mem_plot.plt
-echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/mem_plot.plt
-echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/mem_plot.plt
-echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/mem_plot.plt
+echo "set label '    Hostname: $HOSTNAME' at graph 1, graph 0.63" >> $DIRNAME/mem_plot.plt
+echo "set label '    OS: $OS' at graph 1, graph 0.58" >> $DIRNAME/mem_plot.plt
+echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.53" >> $DIRNAME/mem_plot.plt
+echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.48" >> $DIRNAME/mem_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.43" >> $DIRNAME/mem_plot.plt
+echo "set label '    App. Version: $APP_VERSION' at graph 1, graph 0.38" >> $DIRNAME/mem_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.mem.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.mem.plt' with linespoints title '$PID2_NAME', 'graphs/3_$PID3_NAME.mem.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.mem.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/mem_plot.plt
 }
 
@@ -377,7 +392,8 @@ HOSTNAME=$(hostnamectl | grep "Static hostname" | awk -F ':' '{ print $2 }')
 OS=$(hostnamectl | grep "Operating System" | awk -F ':' '{ print $2 }')
 RTP_TEST=$(mdatp health | grep "real_time_protection_enabled" | awk -F ':' '{ print $2 }')
 PASSV_M_TEST=$(mdatp health | grep passive_mode | awk -F ':' '{ print $2 }')
-BM_TEST=$(sudo cat /etc/opt/microsoft/mdatp/wdavcfg | awk -F ':' '{ print $64 }' | awk -F ',' '{ print $1 }' | sed -e 's/^.//' -e 's/.$//')
+BM_TEST=$(for i in {1..80}; do sudo cat /etc/opt/microsoft/mdatp/wdavcfg | cut -d"," -f $i; done | grep features | grep behaviorMonitoring | awk -F ':' '{ print $3 }')
+APP_VERSION=$(mdatp health | grep app_version | awk -F ':' '{ print $2  }' | tail -c +3 | head -c -2)
 
 # Create mem.cpu.plt script for long running flag
 #
@@ -392,7 +408,8 @@ echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/cpu_plot
 echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/cpu_plot.plt
 echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/cpu_plot.plt
 echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/cpu_plot.plt
-echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/cpu_plot.plt
+echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/cpu_plot.
+echo "set label '    App. Version: $APP_VERSION' at graph 1, graph 0.38" >> $DIRNAME/cpu_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.cpu.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.cpu.plt' with linespoints title '$PID2_NAME', 'graphs/3_$PID3_NAME.cpu.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.cpu.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/cpu_plot.plt
 
 # Create plot.mem.plt script for long running flag
@@ -409,6 +426,7 @@ echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/mem_plot.plt
 echo "set label '    Real Time Protection: $RTP_TEST' at graph 1, graph 0.58" >> $DIRNAME/mem_plot.plt
 echo "set label '    Passive Mode: $PASSV_M_TEST' at graph 1, graph 0.53" >> $DIRNAME/mem_plot.plt
 echo "set label '    Behavior Monitoring: $BM_TEST' at graph 1, graph 0.48" >> $DIRNAME/mem_plot.plt
+echo "set label '    App. Version: $APP_VERSION' at graph 1, graph 0.38" >> $DIRNAME/cpu_plot.plt
 echo "plot 'graphs/1_$PID1_NAME.mem.plt' with linespoints title '$PID1_NAME','graphs/2_$PID2_NAME.mem.plt' with linespoints title '$PID2_NAME', 'graphs/3_$PID3_NAME.mem.plt' with linespoints title '$PID3_NAME','graphs/4_$PID4_NAME.mem.plt' with linespoints title '$PID4_NAME'" >> $DIRNAME/mem_plot.plt
 }
 
@@ -697,6 +715,34 @@ echo " ---------------- $(date) -----------------"
 echo " ----------- Running betaXplatPerformanceTool (v$SCRIPT_VERSION) -----------"
 }
 
+run_CLiA () {
+	
+	LOG_LEVEL=$(mdatp health | grep log_level | awk -F ':' '{ print $2  }' | tail -c +3 | head -c -2)
+
+	echo " *** Preparing 'ClientAnalyzer'..."
+	mkdir CLA && mv XMDEClientAnalyzerBinary CLA > /dev/null 2>&1
+	unzip CLA/XMDEClientAnalyzerBinary -d CLA > /dev/null 2>&1
+	unzip CLA/SupportToolLinuxBinary.zip -d CLA > /dev/null 2>&1
+
+	echo " *** Set 'ClientAnalyzer' log level to 'debug'..."
+	sudo mdatp log level set --level debug > /dev/null 2>&1 
+
+	echo " *** Fixing permissions for 'ClientAnalyzer'..."
+	sudo chmod +x CLA/MDESupportTool > /dev/null 2>&1
+
+	echo " *** Collecting 'ClientAnalyzer' Logs..."
+	sudo CLA/MDESupportTool -d --bypass-disclaimer  > /dev/null 2>&1
+
+    mkdir $DIRNAME/ClientAnalizer > /dev/null 2>&1
+	sudo mv /tmp/*output.zip $DIRNAME/ClientAnalizer > /dev/null 2>&1 
+	echo " *** ClientAnalyzer logs have been collected."
+	
+	echo " *** Cleaning up 'ClientAnalyzer' folders"
+	rm -rf ./CLA > /dev/null 2>&1  
+
+	echo " *** Revert to original log level: $LOG_LEVEL"
+	sudo mdatp log level set --level $LOG_LEVEL > /dev/null 2>&1
+}
 
 #############################################################
 #                   END Define Functions				    #
@@ -711,6 +757,7 @@ case $1 in
 			check_mdatp_running
 			check_requirements
 			create_dir_struct
+			collect_info
 			get_cpuinfo
 			echo_loop
 			loop > $DIRNAME/$MAIN_LOGFILENAME | count
@@ -721,6 +768,7 @@ case $1 in
 			create_plot_graph
 			generate_report
 			get_rtp_stats
+			run_CLiA
 			tidy_up
 			clean_house
 			package_and_compress
@@ -735,6 +783,7 @@ case $1 in
 			check_mdatp_running
 			check_requirements
 			create_dir_struct
+			collect_info
 			get_cpuinfo
 			echo_loop_long
 			loop_long > $DIRNAME/$MAIN_LOGFILENAME
@@ -744,6 +793,8 @@ case $1 in
 			create_plotting_files
 			create_plot_graph_long
 			generate_report
+			get_rtp_stats
+			run_CLiA
 			tidy_up_long
 			clean_house
 			package_and_compress
