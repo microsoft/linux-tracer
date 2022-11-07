@@ -729,7 +729,7 @@ run_CLiA () {
 	sudo chmod +x CLA/MDESupportTool > /dev/null 2>&1
 
 	echo " *** Collecting 'ClientAnalyzer' Logs..."
-	sudo CLA/MDESupportTool -d --bypass-disclaimer
+	sudo CLA/MDESupportTool -d --bypass-disclaimer > /dev/null 2>&1
 
     mkdir $DIRNAME/ClientAnalizer > /dev/null 2>&1
 	sudo mv /tmp/*output.zip $DIRNAME/ClientAnalizer > /dev/null 2>&1 
