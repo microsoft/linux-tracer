@@ -251,6 +251,7 @@ do
 
 	else
 		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
+		c=5
 	fi
 done
 }
