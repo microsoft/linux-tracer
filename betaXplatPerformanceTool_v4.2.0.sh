@@ -250,7 +250,7 @@ do
 		awk "NR==$(($nl-4)), NR==$(($nl+3))" $DIRNAME/rtp_stats_tmp1.log >> $DIRNAME/rtp_statistics.txt # Get Initiator
 
 	else
-		echo "No statistics available." > $DIRNAME/rtp_statistics.txt
+		echo "No statistics available." >> $DIRNAME/rtp_statistics.txt
 		c=5
 	fi
 done
