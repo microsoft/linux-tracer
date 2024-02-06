@@ -353,6 +353,7 @@ echo "set xlabel 'seconds'" >> $DIRNAME/cpu_plot.plt
 echo "set ylabel 'CPU %'" >> $DIRNAME/cpu_plot.plt
 echo "set key noenhanced" >> $DIRNAME/cpu_plot.plt
 echo "set key right top outside" >> $DIRNAME/cpu_plot.plt
+echo "set set rmargin 40" >> $DIRNAME/cpu_plot.plt
 echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/cpu_plot.plt
 echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/cpu_plot.plt
 echo "set label '    Hostname: $HOSTNAME' at graph 1, graph 0.63" >> $DIRNAME/cpu_plot.plt
@@ -370,6 +371,7 @@ echo "set xlabel 'seconds'" >> $DIRNAME/mem_plot.plt
 echo "set ylabel 'Memory MB'" >> $DIRNAME/mem_plot.plt
 echo "set key noenhanced" >> $DIRNAME/mem_plot.plt
 echo "set key right top outside" >> $DIRNAME/mem_plot.plt
+echo "set set rmargin 40" >> $DIRNAME/mem_plot.plt
 echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/mem_plot.plt
 echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/mem_plot.plt
 echo "set label '    Hostname: $HOSTNAME' at graph 1, graph 0.63" >> $DIRNAME/mem_plot.plt
@@ -400,6 +402,7 @@ echo "set xlabel 'Samples in $WAIT second intervals'" >> $DIRNAME/cpu_plot.plt
 echo "set ylabel 'CPU %'" >> $DIRNAME/cpu_plot.plt
 echo "set key noenhanced" >> $DIRNAME/cpu_plot.plt
 echo "set key right top outside" >> $DIRNAME/cpu_plot.plt
+echo "set rmargin 40" >> $DIRNAME/cpu_plot.plt
 echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/cpu_plot.plt
 echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/cpu_plot.plt
 echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/cpu_plot.plt
@@ -416,6 +419,7 @@ echo "set xlabel 'Samples in $WAIT second intervals'" >> $DIRNAME/mem_plot.plt
 echo "set ylabel 'Memory MB'" >> $DIRNAME/mem_plot.plt
 echo "set key noenhanced" >> $DIRNAME/mem_plot.plt
 echo "set key right top outside" >> $DIRNAME/mem_plot.plt
+echo "set rmargin 40" >> $DIRNAME/mem_plot.plt
 echo "set label '       ------ System information ------' at graph 1, graph 0.75" >> $DIRNAME/mem_plot.plt
 echo "set label '       $PLOT_DATE' at graph 1, graph 0.70" >> $DIRNAME/mem_plot.plt
 echo "set label '    OS: $OS' at graph 1, graph 0.63" >> $DIRNAME/mem_plot.plt
