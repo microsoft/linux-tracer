@@ -74,9 +74,9 @@ if ! [[ $HITS =~ $RE ]]
 		exit 0
 fi
 
-if ! [[ $WAIT =~ $FLOAT || $WAIT =~ $RE ]]
+if ! [[ $WAIT =~ $RE ]]
 	then
-		echo " *** Invalid parameter for interval in seconds: not a number"
+		echo " *** Invalid parameter for interval in seconds: not a number or not an integer"
 		echo " *** Usage: ./betaMacOSPerformanceTool.sh -pl <nr. of samples> <interval in seconds>"
 		exit 0
 fi
@@ -251,24 +251,14 @@ done
 }
 
 loop() {
-for (( i = 1; i <= $LIMIT; i++ ))
-do
-  echo $(date)
   echo -e "  PID COMMAND     %CPU   %MEM"
-  top -l1 | grep -e wdavdaemon_enter -e wdavdaemon_unpri -e wdavdaemon | awk '{print $1,$2,$3,$8}'
-  # (processing time)+(wait time)=1 <=> 0.2+0.8=1 second
-  sleep 0.8
-done
+  top -l $LIMIT | grep -wE 'wdavdaemon_unpri|wdavdaemon_enter|wdavdaemon' | awk '{print $1,$2,$3,$8}'
+
 }
 
 loop_long() {
-for (( i = 1; i <= $HITS; i++ ))
-do
-  echo $(date)
   echo -e "  PID COMMAND     %CPU   %MEM"
-  top -l1 | grep -e wdavdaemon_enter -e wdavdaemon_unpri -e wdavdaemon | awk '{print $1,$2,$3,$8}'
-  sleep $WAIT
-done
+  top -l $HITS -s $WAIT | grep -wE 'wdavdaemon_unpri|wdavdaemon_enter|wdavdaemon' | awk '{print $1,$2,$3,$8}'
 }
 
 count() {
@@ -291,10 +281,12 @@ do
 done
 }
 
-feed_data () {
-PID1=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '1q;d')
-PID2=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '2q;d')
-PID3=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n6 | awk -F ' ' '{ print $1 }' | tail -n +3 | sed '3q;d')
+feed_data () {	
+# extract MDATP PIDs from the main file	
+#
+PID1=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n4 | awk -F ' ' '{ print $1 }' | grep -v PID | sed '1q;d')
+PID2=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n4 | awk -F ' ' '{ print $1 }' | grep -v PID | sed '2q;d')
+PID3=$(cat $DIRNAME/$MAIN_LOGFILENAME | head -n4 | awk -F ' ' '{ print $1 }' | grep -v PID | sed '3q;d')
 
 echo -e " *** Creating log files for analysis..."
 
@@ -482,7 +474,7 @@ mv $DIRNAME/plot/graphs/cpu_plot.plt $DIRNAME/plot/graphs/mem_plot.plt $DIRNAME/
 
 clean_house () {
 	rm -rf $DIRNAME/log $DIRNAME/main $DIRNAME/raw
-	rm -rf $DIRNAME/report/pid1.txt $DIRNAME/report/pid2.txt $DIRNAME/report/pid3.txt
+	rm -rf $DIRNAME/pid1.txt $DIRNAME/pid2.txt $DIRNAME/pid3.txt
 }
 
 package_and_compress () {
