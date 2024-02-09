@@ -36,9 +36,9 @@ MacOS:
 Linux:
 - ./betaLinuxPerformanceTool_v4.2.0.sh -h
 ### Run script as needed. Below example runs for 1 minute, 60 seconds:
-- ./beta---<OS>---PerformanceTool_v4.2.0.sh -ps 60
+- ./beta-<--OS-->-PerformanceTool_v4.2.0.sh -ps 60
 ### Run script as needed. Below example runs for 5 minutes, 300 seconds:
-- ./beta---<OS>---PerformanceTool_v4.2.0.sh -ps 300
+- ./beta-<--OS-->-PerformanceTool_v4.2.0.sh -ps 300
 ### Confirm investigation package is created:
-- You should find a package named beta---<OS>---PerformanceTool_v4.2.0.sh-<--date-->.zip
+- You should find a package named beta-<--OS-->-PerformanceTool_v4.2.0.sh-<--date-->.zip
 
