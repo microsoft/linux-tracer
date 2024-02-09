@@ -26,13 +26,14 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 
 # Usage:
 ### From the Linux server, get script:
-- wget https://aka.ms/betaxplatperformancetool -O betaXplatPerformanceTool.sh && chmod +x betaXplatPerformanceTool.sh
+- curl https://raw.githubusercontent.com/microsoft/linux-tracer/download/betaMacOSPerformanceTool_v4.2.0.sh -o betaMacOSPerformanceTool_v4.2.0.sh
+  
 ### Read 'help' dialog for instructions:
-- ./betaXplatPerformanceTool.sh -h
+- ./betaMacOSPerformanceTool_v4.2.0.sh -h
 ### Run script as needed. Below example runs for 5 minutes, 300 seconds:
-- ./betaXplatPerformanceTool.sh -ps 300
+- ./betaMacOSPerformanceTool_v4.2.0.sh -ps 300
 ### Confirm investigation package is created:
-- You should find a package named betaXplatPerformanceTool-<--date-->.zip
+- You should find a package named betaMacOSPerformanceTool_v4.2.0.sh-<--date-->.zip
 
 # Known to work in the following systems:
 - RHEL 8.2 (Ootpa)
@@ -43,3 +44,4 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 - Oracle Enterprise Linux 8.6
 - RHEL 7.8
 - RHEL 8
+
