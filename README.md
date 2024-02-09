@@ -1,6 +1,5 @@
 # beta Xplat Performance Tool
 - Last version is v4.2.0
-- sha256sum 94034cf88557c50adc8bccc7b6d82c8e67087cc81139770a737473bc1224b68a
 
 # Context:
 The 'beta Xplat Performance Tool' is intended for Linux performance data collection, CPU and Memory load investigation and analysis, when high CPU or Memory load is reported. It aims at quickly being able to determine a device’s CPU and Memory load and ellaborate on mitigation, as well as propose fixes. It's very intuitive and easy to use, returns results that are easy to interpret and relies on very basic set of tools existent in virtually all Linux minimal installations.
@@ -26,22 +25,20 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 
 # Usage:
 ### From the Linux server, get script:
+MacOS: 
 - curl https://raw.githubusercontent.com/microsoft/linux-tracer/download/betaMacOSPerformanceTool_v4.2.0.sh -o betaMacOSPerformanceTool_v4.2.0.sh && chmod a+x betaMacOSPerformanceTool_v4.2.0.sh
+Linux:
+- wget -O betaLinuxPerformanceTool_v4.2.0.sh https://raw.githubusercontent.com/microsoft/linux-tracer/download/betaLinuxPerformanceTool_v4.2.0.sh && chmod a+x betaLinuxPerformanceTool_v4.2.0.sh
   
 ### Read 'help' dialog for instructions:
+MacOS:
 - ./betaMacOSPerformanceTool_v4.2.0.sh -h
+Linux:
+- ./betaLinuxPerformanceTool_v4.2.0.sh -h
+### Run script as needed. Below example runs for 1 minute, 60 seconds:
+- ./beta---<OS>---PerformanceTool_v4.2.0.sh -ps 60
 ### Run script as needed. Below example runs for 5 minutes, 300 seconds:
-- ./betaMacOSPerformanceTool_v4.2.0.sh -ps 300
+- ./beta---<OS>---PerformanceTool_v4.2.0.sh -ps 300
 ### Confirm investigation package is created:
-- You should find a package named betaMacOSPerformanceTool_v4.2.0.sh-<--date-->.zip
-
-# Known to work in the following systems:
-- RHEL 8.2 (Ootpa)
-- Ubuntu 20.04.4 LTS (Focal Fossa)
-- CentOS 7.9
-- Debian 11.5
-- Oracle Enterprise Linux 7.9
-- Oracle Enterprise Linux 8.6
-- RHEL 7.8
-- RHEL 8
+- You should find a package named beta---<OS>---PerformanceTool_v4.2.0.sh-<--date-->.zip
 
