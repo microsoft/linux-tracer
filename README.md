@@ -34,8 +34,10 @@ Linux:
 ### Read 'help' dialog for instructions:
 MacOS:
 - ./betaMacOSPerformanceTool_v4.2.0.sh -h
+    
 Linux:
 - ./betaLinuxPerformanceTool_v4.2.0.sh -h
+  
 ### Run script as needed. Below example runs for 1 minute, 60 seconds:
 - ./beta-<--OS-->-PerformanceTool_v4.2.0.sh -ps 60
 ### Run script as needed. Below example runs for 5 minutes, 300 seconds:
