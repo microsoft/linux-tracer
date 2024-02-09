@@ -26,7 +26,7 @@ The 'beta Xplat Performance Tool' is intended for Linux performance data collect
 
 # Usage:
 ### From the Linux server, get script:
-- curl https://raw.githubusercontent.com/microsoft/linux-tracer/download/betaMacOSPerformanceTool_v4.2.0.sh -o betaMacOSPerformanceTool_v4.2.0.sh
+- curl https://raw.githubusercontent.com/microsoft/linux-tracer/download/betaMacOSPerformanceTool_v4.2.0.sh -o betaMacOSPerformanceTool_v4.2.0.sh && chmod a+x betaMacOSPerformanceTool_v4.2.0.sh
   
 ### Read 'help' dialog for instructions:
 - ./betaMacOSPerformanceTool_v4.2.0.sh -h
