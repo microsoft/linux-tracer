@@ -46,4 +46,4 @@ Linux:
 - You should find a package named beta-<--OS-->-PerformanceTool_v4.2.0.sh-<--date-->.zip
 
 # Future work:
-- I'm planning on merging the two diagnostic tools on one single file that will called betaXplatPerformanceTool_-<-version>.sh
+- I'm planning on merging the two diagnostic tools in one single file that will called betaXplatPerformanceTool_-<-version>.sh
